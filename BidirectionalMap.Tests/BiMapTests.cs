@@ -1,9 +1,10 @@
 using System;
 using Xunit;
+using BidirectionalMap;
 
 namespace BidirectionalMap.Tests
 {
-    public class UnitTest1
+    public class BiMapTests
     {
         // Tests
         // - make sure i can instantiate like a dictionary (given a set of keyvaluepairs)
@@ -12,11 +13,12 @@ namespace BidirectionalMap.Tests
         // - make sure contains always
         // - mmake sure it's 1-to-1 / reversible 
         // - test mapping to same value type
-        // - 
+        // - make sure that the indexers don't mutate when returned as a dictionary (deep copy semantic)
         [Fact]
         public void OneToOneReversible()
         {
-            BidirectionalMap<int, string> map = new BidirectionalMap<int, string>();
+            // this would be a good use of fscheck
+            BiMap<int, string> map = new BiMap<int, string>();
         }
 
         [Fact]
