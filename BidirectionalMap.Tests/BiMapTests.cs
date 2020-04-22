@@ -65,10 +65,12 @@ namespace BidirectionalMap.Tests
             map.Remove(1);
 
             //Make sure I can't fetch after removing
+            Assert.False(map.Forward.ContainsKey(1));
             Assert.Throws<KeyNotFoundException>(() => {
                 var val = map.Forward[1];
             });
 
+            Assert.False(map.Reverse.ContainsKey(2));
             Assert.Throws<KeyNotFoundException>(() => {
                 var reverseVal = map.Reverse[2];
             });
@@ -95,6 +97,25 @@ namespace BidirectionalMap.Tests
             BiMap<int, int> map = new BiMap<int, int>();
 
             Assert.False(map.Remove(1));
+        }
+
+        [Fact]
+        public void Contains_ValidKey()
+        {
+            BiMap<int, int> map = new BiMap<int, int>();
+
+            map.Add(1, 2);
+            Assert.True(map.Forward.ContainsKey(1));
+            Assert.True(map.Reverse.ContainsKey(2));
+        }
+
+        [Fact]
+        public void Contains_InvalidKey()
+        {
+            BiMap<int, int> map = new BiMap<int, int>();
+
+            Assert.False(map.Forward.ContainsKey(1));
+            Assert.False(map.Reverse.ContainsKey(2));
         }
 
         [Fact]

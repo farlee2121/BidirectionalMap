@@ -116,7 +116,7 @@ namespace BidirectionalMap
                 return _dictionary.Count;
             }
 
-            internal bool ContainsKey(Key key)
+            public bool ContainsKey(Key key)
             {
                 return _dictionary.ContainsKey(key);
             }
