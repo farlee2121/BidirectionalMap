@@ -11,6 +11,7 @@ namespace BidirectionalMap
         public Indexer<TForwardKey, TReverseKey> Forward { get; private set; } = new Indexer<TForwardKey, TReverseKey>();
         public Indexer<TReverseKey, TForwardKey> Reverse { get; private set; } = new Indexer<TReverseKey, TForwardKey>();
 
+        const string DuplicateKeyErrorMessage = "";
 
         public BiMap()
         {
@@ -24,6 +25,11 @@ namespace BidirectionalMap
 
         public void Add(TForwardKey t1, TReverseKey t2)
         {
+            if (Forward.ContainsKey(t1))
+                throw new ArgumentException(DuplicateKeyErrorMessage, nameof(t1));
+            if (Reverse.ContainsKey(t2))
+                throw new ArgumentException(DuplicateKeyErrorMessage, nameof(t2));
+
             Forward.Add(t1, t2);
             Reverse.Add(t2, t1);
         }
@@ -78,6 +84,11 @@ namespace BidirectionalMap
             internal int Count()
             {
                 return _dictionary.Count;
+            }
+
+            internal bool ContainsKey(Key key)
+            {
+                return _dictionary.ContainsKey(key);
             }
 
             /// <summary>

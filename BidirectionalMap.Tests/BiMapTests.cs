@@ -8,12 +8,9 @@ namespace BidirectionalMap.Tests
     public class BiMapTests
     {
         // Tests
-        // - make sure i can instantiate like a dictionary (given a set of keyvaluepairs)
-        // - make sure I can instantiate throught the constructor with various types
         // - make sure I can add and remove while staying consistent (via kvp, add separate k and v, mutations of indexes)
         // - make sure contains always
         // - mmake sure it's 1-to-1 / reversible 
-        // - test mapping to same value type
         // - make sure that the indexers don't mutate when returned as a dictionary (deep copy semantic)
 
         [Fact]
@@ -26,8 +23,52 @@ namespace BidirectionalMap.Tests
         }
 
         [Fact]
+        public void AddKeyValueMap()
+        {
+            BiMap<int, int> map = new BiMap<int, int>();
+            map.Add(1, 2);
+            Assert.Equal(2, map.Forward[1]);
+            Assert.Equal(1, map.Reverse[2]);
+            Assert.Single(map);
+        }
+
+        [Fact]
+        public void ReAddExistingKey()
+        {
+            BiMap<int, int> map = new BiMap<int, int>();
+            map.Add(1, 2);
+
+            Assert.Throws<ArgumentException>(() => {
+                map.Add(1, 1);
+            });
+        }
+
+        [Fact]
+        public void ReAddExistingReverseKey()
+        {
+            BiMap<int, int> map = new BiMap<int, int>();
+            map.Add(1, 2);
+            Assert.Throws<ArgumentException>(() =>{
+                map.Add(2, 2);
+            });
+        }
+
+        [Fact]
+        public void RemoveMapItem()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void RemoveInvalidItem()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
         public void OneToOneReversible()
         {
+
             // this would be a good use of fscheck
             BiMap<int, string> map = new BiMap<int, string>();
             throw new NotImplementedException();
