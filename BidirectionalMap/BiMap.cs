@@ -34,6 +34,31 @@ namespace BidirectionalMap
             Reverse.Add(t2, t1);
         }
 
+        public bool Remove(TForwardKey forwardKey)
+        {
+            if (Forward.ContainsKey(forwardKey) == false) return false;
+            var reverseKey = Forward[forwardKey];
+            bool success;
+            if (Forward.Remove(forwardKey))
+            {
+                if (Reverse.Remove(reverseKey))
+                {
+                    success = true;
+                }
+                else
+                {
+                    Forward.Add(forwardKey, reverseKey);
+                    success = false;
+                }
+            }
+            else
+            {
+                success = false;
+            }
+
+            return success;
+        }
+
         public int Count()
         {
             return Forward.Count();
@@ -69,7 +94,6 @@ namespace BidirectionalMap
             public Value this[Key index]
             {
                 get { return _dictionary[index]; }
-                set { _dictionary[index] = value; }
             }
 
             public static implicit operator Dictionary<Key, Value>(Indexer<Key, Value> indexer)
@@ -81,6 +105,12 @@ namespace BidirectionalMap
             {
                 _dictionary.Add(key, value);
             }
+
+            internal bool Remove(Key key)
+            {
+                return _dictionary.Remove(key);
+            }
+
             internal int Count()
             {
                 return _dictionary.Count;

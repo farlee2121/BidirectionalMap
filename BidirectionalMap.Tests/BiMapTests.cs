@@ -56,13 +56,45 @@ namespace BidirectionalMap.Tests
         [Fact]
         public void RemoveMapItem()
         {
-            throw new NotImplementedException();
+            BiMap<int, int> map = new BiMap<int, int>();
+            map.Add(1, 2);
+
+            Assert.Equal(2, map.Forward[1]);
+            Assert.Equal(1, map.Reverse[2]);
+
+            map.Remove(1);
+
+            //Make sure I can't fetch after removing
+            Assert.Throws<KeyNotFoundException>(() => {
+                var val = map.Forward[1];
+            });
+
+            Assert.Throws<KeyNotFoundException>(() => {
+                var reverseVal = map.Reverse[2];
+            });
         }
 
         [Fact]
         public void RemoveInvalidItem()
         {
-            throw new NotImplementedException();
+            BiMap<int, int> map = new BiMap<int, int>();
+            map.Add(1, 2);
+
+            Assert.Equal(2, map.Forward[1]);
+            Assert.Equal(1, map.Reverse[2]);
+
+            Assert.False(map.Remove(2));
+
+            Assert.Equal(2, map.Forward[1]);
+            Assert.Equal(1, map.Reverse[2]);
+        }
+
+        [Fact] 
+        public void RemoveFromEmptyMap()
+        {
+            BiMap<int, int> map = new BiMap<int, int>();
+
+            Assert.False(map.Remove(1));
         }
 
         [Fact]
