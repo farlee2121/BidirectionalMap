@@ -1,5 +1,6 @@
 Bidirectional Map
 =================
+![.NET Core](https://github.com/farlee2121/BidirectionalMap/workflows/.NET%20Core/badge.svg)
 
 Exactly what it sounds like. This library offers a single class `BiMap` that let's you define a two-way one-to-one map between values
 the same way you would define a one-way map with a dictionary.
