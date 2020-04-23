@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidirectionalMap", "BidirectionalMap\BidirectionalMap.csproj", "{E0287EFC-DC2C-4837-92FD-952810AF00C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BidirectionalMap.Tests", "BidirectionalMap.Tests\BidirectionalMap.Tests.csproj", "{600B0862-C718-40E0-BA37-BA74B36E30B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidirectionalMap.Tests", "BidirectionalMap.Tests\BidirectionalMap.Tests.csproj", "{600B0862-C718-40E0-BA37-BA74B36E30B7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FD986FE5-9490-4146-972E-1585FC3D3BD9}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe.md = ReadMe.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
