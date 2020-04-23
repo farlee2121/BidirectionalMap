@@ -8,6 +8,8 @@ Example:
 --------
 
 ```cs
+using BidirectionalMap;
+
 BiMap<int, string> map = new BiMap<int, string>(){
 	{1, "Circle"},
 	{2, "Triangle"},
@@ -36,6 +38,11 @@ Some common scenarios for this kind of technique include
  - Mapping display values to and from requests
  - Wrapping other code (adapter-style) to consume the api on your own terms
  - Choosing an action or configuration based on some kind of type value (this is usually just one-way though)
+
+Install
+-------
+
+Will be available as a nuget package... pending upload
 
 
 Feedback/Bugs/Contribution
