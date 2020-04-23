@@ -1,6 +1,6 @@
 Bidirectional Map
 =================
-![build](https://github.com/farlee2121/BidirectionalMap/workflows/.NET%20Core/badge.svg)
+![build](https://github.com/farlee2121/BidirectionalMap/workflows/Build/badge.svg)
 [![Coveralls](https://coveralls.io/repos/github/farlee2121/BidirectionalMap/badge.svg?branch=master)](https://coveralls.io/github/farlee2121/BidirectionalMap?branch=master)
 [![nuget](https://img.shields.io/nuget/v/ResXResourceReader.NetStandard.svg)](https://www.nuget.org/packages/ResXResourceReader.NetStandard/)
 
