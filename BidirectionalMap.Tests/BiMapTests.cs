@@ -2,6 +2,8 @@ using System;
 using Xunit;
 using BidirectionalMap;
 using System.Collections.Generic;
+using FsCheck.Xunit;
+using System.Linq;
 
 namespace BidirectionalMap.Tests
 {
@@ -38,7 +40,8 @@ namespace BidirectionalMap.Tests
             BiMap<int, int> map = new BiMap<int, int>();
             map.Add(1, 2);
 
-            Assert.Throws<ArgumentException>(() => {
+            Assert.Throws<ArgumentException>(() =>
+            {
                 map.Add(1, 1);
             });
         }
@@ -48,7 +51,8 @@ namespace BidirectionalMap.Tests
         {
             BiMap<int, int> map = new BiMap<int, int>();
             map.Add(1, 2);
-            Assert.Throws<ArgumentException>(() =>{
+            Assert.Throws<ArgumentException>(() =>
+            {
                 map.Add(2, 2);
             });
         }
@@ -66,12 +70,14 @@ namespace BidirectionalMap.Tests
 
             //Make sure I can't fetch after removing
             Assert.False(map.Forward.ContainsKey(1));
-            Assert.Throws<KeyNotFoundException>(() => {
+            Assert.Throws<KeyNotFoundException>(() =>
+            {
                 var val = map.Forward[1];
             });
 
             Assert.False(map.Reverse.ContainsKey(2));
-            Assert.Throws<KeyNotFoundException>(() => {
+            Assert.Throws<KeyNotFoundException>(() =>
+            {
                 var reverseVal = map.Reverse[2];
             });
         }
@@ -91,7 +97,7 @@ namespace BidirectionalMap.Tests
             Assert.Equal(1, map.Reverse[2]);
         }
 
-        [Fact] 
+        [Fact]
         public void RemoveFromEmptyMap()
         {
             BiMap<int, int> map = new BiMap<int, int>();
@@ -118,23 +124,44 @@ namespace BidirectionalMap.Tests
             Assert.False(map.Reverse.ContainsKey(2));
         }
 
-        [Fact]
-        public void OneToOneReversible()
-        {
 
-            // this would be a good use of fscheck
-            BiMap<int, string> map = new BiMap<int, string>();
-            throw new NotImplementedException();
+        [Fact]
+        public void IndexerToDictionaryDoesNotMutateOriginal()
+        {
+            BiMap<int, int> map = new BiMap<int, int>();
+            var forwardMap = map.Forward.ToDictionary();
+            Assert.Empty(map.Forward);
+
+            forwardMap.Add(1, 1);
+            Assert.Empty(map.Forward);
+
+            var reverseMap = map.Reverse.ToDictionary();
+            reverseMap.Add(1, 1);
+            Assert.Empty(map.Reverse);
         }
 
         [Fact]
-        public void ForwardAndReverseOperationallyConsistent()
+        public void GetIndexerKeysAndValues()
         {
-            throw new NotImplementedException();
+            var map = new BiMap<int, string>
+            {
+                {1, "1" },
+                {2, "2" },
+                {3, "3" },
+            };
+
+            var forwardKeys = new[] { 1, 2, 3 };
+            var reverseKeys = new[] { "1", "2", "3" };
+            Assert.Equal(forwardKeys, map.Forward.Keys);
+            Assert.Equal(forwardKeys, map.Reverse.Values);
+
+            Assert.Equal(reverseKeys, map.Reverse.Keys);
+            Assert.Equal(reverseKeys, map.Forward.Values);
         }
 
+
         [Fact]
-        public void InstantiateFromConstructor()
+        public void Constructor_InstantiateValid()
         {
             var dict = new Dictionary<int, string>
             {
@@ -154,7 +181,23 @@ namespace BidirectionalMap.Tests
         }
 
         [Fact]
-        public void InstantiateFromInitializer()
+        public void Constructor_DuplicatKey()
+        {
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var dict = new Dictionary<int, string>
+                {
+                    {1, "1" },
+                    {1, "2" },
+                };
+
+                BiMap<int, string> map = new BiMap<int, string>(dict);
+            });
+
+        }
+
+        [Fact]
+        public void Initializer_InstantiateValid()
         {
             //QUESTION: Should I instead run the full test suite for every initialization method?
             BiMap<int, string> map = new BiMap<int, string>()
@@ -172,5 +215,36 @@ namespace BidirectionalMap.Tests
             Assert.Equal(2, map.Reverse["2"]);
             Assert.Equal(3, map.Reverse["3"]);
         }
+
+        [Fact]
+        public void Initializer_DuplicatKey()
+        {
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var dict = new BiMap<int, string>
+                {
+                    {1, "1" },
+                    {1, "2" },
+                };
+
+            });
+
+        }
+
+
+        //TODO: Experiment with property-based tests
+
+        //[Property]
+        //public bool OneToOneReversible(Dictionary<int, string> mapVals)
+        //{
+        //    var map = new BiMap<int, string>(mapVals);
+        //    return map.All(kvp =>  map.Reverse[map.Forward[kvp.Key]] == kvp.Key);
+        //}
+
+        //[Property]
+        //public void ForwardAndReverseOperationallyConsistent()
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

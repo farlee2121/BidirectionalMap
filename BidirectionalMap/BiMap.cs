@@ -66,12 +66,12 @@ namespace BidirectionalMap
 
         IEnumerator<KeyValuePair<TForwardKey, TReverseKey>> IEnumerable<KeyValuePair<TForwardKey, TReverseKey>>.GetEnumerator()
         {
-            return Forward.ToDictionary().GetEnumerator();
+            return Forward.GetEnumerator();
         }
 
         public IEnumerator GetEnumerator()
         {
-            return Forward.ToDictionary().GetEnumerator();
+            return Forward.GetEnumerator();
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace BidirectionalMap
         /// </summary>
         /// <typeparam name="Key"></typeparam>
         /// <typeparam name="Value"></typeparam>
-        public class Indexer<Key, Value>
+        public class Indexer<Key, Value> : IEnumerable<KeyValuePair<Key, Value>>
         {
             private IDictionary<Key, Value> _dictionary;
 
@@ -121,6 +121,21 @@ namespace BidirectionalMap
                 return _dictionary.ContainsKey(key);
             }
 
+            public IEnumerable<Key> Keys
+            {
+                get { 
+                    return _dictionary.Keys;
+                }
+            }
+
+            public IEnumerable<Value> Values
+            {
+                get
+                {
+                    return _dictionary.Values;
+                }
+            }
+
             /// <summary>
             /// Deep copy lookup as a dictionary
             /// </summary>
@@ -129,7 +144,16 @@ namespace BidirectionalMap
             {
                 return new Dictionary<Key, Value>(_dictionary);
             }
-            
+
+            public IEnumerator<KeyValuePair<Key, Value>> GetEnumerator()
+            {
+                return _dictionary.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _dictionary.GetEnumerator();
+            }
         }
 
         
