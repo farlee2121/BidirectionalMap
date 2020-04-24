@@ -2,7 +2,7 @@ Bidirectional Map
 =================
 ![build](https://github.com/farlee2121/BidirectionalMap/workflows/Build/badge.svg)
 [![codecov](https://codecov.io/gh/farlee2121/BidirectionalMap/branch/master/graph/badge.svg)](https://codecov.io/gh/farlee2121/BidirectionalMap)
-[![nuget](https://img.shields.io/nuget/v/BidirectionalMap.svg)](https://www.nuget.org/packages/BidirectionalMap/)
+[![Nuget](https://img.shields.io/nuget/v/BidirectionalMap)](https://www.nuget.org/packages/BidirectionalMap/)
 
 Exactly what it sounds like. This library offers a single class `BiMap` that let's you define a two-way one-to-one map between values
 the same way you would define a one-way map with a dictionary.
