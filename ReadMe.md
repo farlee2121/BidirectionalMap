@@ -1,8 +1,8 @@
 Bidirectional Map
 =================
 ![build](https://github.com/farlee2121/BidirectionalMap/workflows/Build/badge.svg)
-[![Coveralls](https://coveralls.io/repos/github/farlee2121/BidirectionalMap/badge.svg?branch=master)](https://coveralls.io/github/farlee2121/BidirectionalMap?branch=master)
-[![nuget](https://img.shields.io/nuget/v/ResXResourceReader.NetStandard.svg)](https://www.nuget.org/packages/ResXResourceReader.NetStandard/)
+<!--[![Coveralls](https://coveralls.io/repos/github/farlee2121/BidirectionalMap/badge.svg?branch=master)](https://coveralls.io/github/farlee2121/BidirectionalMap?branch=master)-->
+[![nuget](https://img.shields.io/nuget/v/BidirectionalMap.svg)](https://www.nuget.org/packages/BidirectionalMap/)
 
 Exactly what it sounds like. This library offers a single class `BiMap` that let's you define a two-way one-to-one map between values
 the same way you would define a one-way map with a dictionary.
