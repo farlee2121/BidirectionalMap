@@ -1,7 +1,7 @@
 Bidirectional Map
 =================
 ![build](https://github.com/farlee2121/BidirectionalMap/workflows/Build/badge.svg)
-<!--[![Coveralls](https://coveralls.io/repos/github/farlee2121/BidirectionalMap/badge.svg?branch=master)](https://coveralls.io/github/farlee2121/BidirectionalMap?branch=master)-->
+[![codecov](https://codecov.io/gh/farlee2121/BidirectionalMap/branch/master/graph/badge.svg)](https://codecov.io/gh/farlee2121/BidirectionalMap)
 [![nuget](https://img.shields.io/nuget/v/BidirectionalMap.svg)](https://www.nuget.org/packages/BidirectionalMap/)
 
 Exactly what it sounds like. This library offers a single class `BiMap` that let's you define a two-way one-to-one map between values
@@ -45,7 +45,7 @@ Some common scenarios for this kind of technique include
 Install
 -------
 
-Available via nuget at https://www.nuget.org/packages/BidirectionalMap/
+Available via nuget at https://www.nuget.org/packages/BidirectionalMap/	
 
 
 Feedback/Bugs/Contribution
