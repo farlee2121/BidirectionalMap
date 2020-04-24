@@ -45,7 +45,7 @@ Some common scenarios for this kind of technique include
 Install
 -------
 
-Will be available as a nuget package... pending upload
+Available via nuget at https://www.nuget.org/packages/BidirectionalMap/
 
 
 Feedback/Bugs/Contribution
