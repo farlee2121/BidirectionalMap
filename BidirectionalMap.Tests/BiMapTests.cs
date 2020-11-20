@@ -4,6 +4,7 @@ using BidirectionalMap;
 using System.Collections.Generic;
 using FsCheck.Xunit;
 using System.Linq;
+using FsCheck;
 
 namespace BidirectionalMap.Tests
 {
@@ -232,19 +233,8 @@ namespace BidirectionalMap.Tests
         }
 
 
-        //TODO: Experiment with property-based tests
+        //NOTE: Property tests move to F# for easier value-based equality and fluent property definition
 
-        //[Property]
-        //public bool OneToOneReversible(Dictionary<int, string> mapVals)
-        //{
-        //    var map = new BiMap<int, string>(mapVals);
-        //    return map.All(kvp =>  map.Reverse[map.Forward[kvp.Key]] == kvp.Key);
-        //}
-
-        //[Property]
-        //public void ForwardAndReverseOperationallyConsistent()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        
     }
 }
