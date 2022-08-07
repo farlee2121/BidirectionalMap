@@ -25,7 +25,7 @@ var mappedInt = map.Reverse["Circle"]; // 1
 
 It isn't limited to value types
 ```cs
-BiMap<int, Action> map = new BiMap<int, string>(){
+BiMap<int, Action> map = new BiMap<int, Action>(){
 	{1, () => /* do something*/},
 };
 
