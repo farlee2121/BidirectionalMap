@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BidirectionalMap\BidirectionalMap.csproj" />
+    <ProjectReference Include="..\..\src\BidirectionalMap\BidirectionalMap.csproj" />
   </ItemGroup>
 
 </Project>
