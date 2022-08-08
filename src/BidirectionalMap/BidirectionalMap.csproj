@@ -15,6 +15,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/farlee2121/BidirectionalMap</RepositoryUrl>
     <PackageTags>dotnet;dotnet-standard;lookup;map;bidirectional</PackageTags>
+    <RootNamespace>System.Collections.Generic</RootNamespace>
   </PropertyGroup>
 
 </Project>

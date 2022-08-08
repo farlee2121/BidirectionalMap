@@ -1,12 +1,12 @@
 using System;
 using Xunit;
-using BidirectionalMap;
+using System.Collections.Generic;
 using System.Collections.Generic;
 using FsCheck.Xunit;
 using System.Linq;
 using FsCheck;
 
-namespace BidirectionalMap.Tests
+namespace System.Collections.Generic.Tests
 {
     public class BiMapTests
     {

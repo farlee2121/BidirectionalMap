@@ -3,7 +3,6 @@ module Tests
 open System
 open Xunit
 open FsCheck.Xunit
-open BidirectionalMap
 open System.Collections.Generic
 open FsCheck
 
