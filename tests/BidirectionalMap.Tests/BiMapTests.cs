@@ -1,107 +1,81 @@
-using System;
 using Xunit;
 using System.Collections.Generic;
-using System.Collections.Generic;
-using FsCheck.Xunit;
 using System.Linq;
-using FsCheck;
+using System;
 
-namespace System.Collections.Generic.Tests
+namespace BidirectionalMap.Tests
 {
     public class BiMapTests
     {
         // Tests
         // - make sure I can add and remove while staying consistent (via kvp, add separate k and v, mutations of indexes)
         // - make sure contains always
-        // - mmake sure it's 1-to-1 / reversible 
+        // - make sure it's 1-to-1 / reversible 
         // - make sure that the indexers don't mutate when returned as a dictionary (deep copy semantic)
 
         [Fact]
         public void EmptyConstructorInitializesToEmptyMap()
         {
-            BiMap<int, int> map = new BiMap<int, int>();
+            var map = new BiMap<int, int>();
+
             Assert.Empty(map);
-            Assert.Empty(map.Forward.ToDictionary());
-            Assert.Empty(map.Reverse.ToDictionary());
+            Assert.Empty(map.Direct);
+            Assert.Empty(map.Reverse);
         }
 
         [Fact]
         public void AddKeyValueMap()
         {
-            BiMap<int, int> map = new BiMap<int, int>();
+            var map = new BiMap<int, int>();
             map.Add(1, 2);
-            Assert.Equal(2, map.Forward[1]);
-            Assert.Equal(1, map.Reverse[2]);
+
             Assert.Single(map);
+            Assert.Equal(2, map.Direct[1]);
+            Assert.Equal(1, map.Reverse[2]);
         }
 
         [Fact]
         public void ReAddExistingKey()
         {
-            BiMap<int, int> map = new BiMap<int, int>();
+            var map = new BiMap<int, int>();
             map.Add(1, 2);
 
-            Assert.Throws<ArgumentException>(() =>
-            {
-                map.Add(1, 1);
-            });
-        }
-
-        [Fact]
-        public void ReAddExistingReverseKey()
-        {
-            BiMap<int, int> map = new BiMap<int, int>();
-            map.Add(1, 2);
-            Assert.Throws<ArgumentException>(() =>
-            {
-                map.Add(2, 2);
-            });
+            Assert.Throws<ArgumentException>(() => map.Add(1, 2));
+            Assert.Throws<ArgumentException>(() => map.Add(1, 5));
+            Assert.Throws<ArgumentException>(() => map.Add(5, 2));
         }
 
         [Fact]
         public void RemoveMapItem()
         {
-            BiMap<int, int> map = new BiMap<int, int>();
+            var map = new BiMap<int, int>();
             map.Add(1, 2);
 
-            Assert.Equal(2, map.Forward[1]);
-            Assert.Equal(1, map.Reverse[2]);
-
-            Assert.Equal(true, map.Remove(1));
-
-            //Make sure I can't fetch after removing
-            Assert.False(map.Forward.ContainsKey(1));
-            Assert.Throws<KeyNotFoundException>(() =>
-            {
-                var val = map.Forward[1];
-            });
+            Assert.True(map.Remove(1));
+            
+            Assert.False(map.Direct.ContainsKey(1));
+            Assert.Throws<KeyNotFoundException>(() => map.Direct[1]);
 
             Assert.False(map.Reverse.ContainsKey(2));
-            Assert.Throws<KeyNotFoundException>(() =>
-            {
-                var reverseVal = map.Reverse[2];
-            });
+            Assert.Throws<KeyNotFoundException>(() => map.Reverse[2]);
         }
 
         [Fact]
         public void RemoveInvalidItem()
         {
-            BiMap<int, int> map = new BiMap<int, int>();
+            var map = new BiMap<int, int>();
             map.Add(1, 2);
-
-            Assert.Equal(2, map.Forward[1]);
-            Assert.Equal(1, map.Reverse[2]);
 
             Assert.False(map.Remove(2));
 
-            Assert.Equal(2, map.Forward[1]);
+            Assert.Equal(2, map.Direct[1]);
             Assert.Equal(1, map.Reverse[2]);
         }
 
         [Fact]
         public void RemoveFromEmptyMap()
         {
-            BiMap<int, int> map = new BiMap<int, int>();
+            var map = new BiMap<int, int>();
 
             Assert.False(map.Remove(1));
         }
@@ -109,35 +83,35 @@ namespace System.Collections.Generic.Tests
         [Fact]
         public void Contains_ValidKey()
         {
-            BiMap<int, int> map = new BiMap<int, int>();
+            var map = new BiMap<int, int>();
 
             map.Add(1, 2);
-            Assert.True(map.Forward.ContainsKey(1));
+            Assert.True(map.Direct.ContainsKey(1));
             Assert.True(map.Reverse.ContainsKey(2));
         }
 
         [Fact]
         public void Contains_InvalidKey()
         {
-            BiMap<int, int> map = new BiMap<int, int>();
+            var map = new BiMap<int, int>();
 
-            Assert.False(map.Forward.ContainsKey(1));
+            Assert.False(map.Direct.ContainsKey(1));
             Assert.False(map.Reverse.ContainsKey(2));
         }
-
 
         [Fact]
         public void IndexerToDictionaryDoesNotMutateOriginal()
         {
-            BiMap<int, int> map = new BiMap<int, int>();
-            var forwardMap = map.Forward.ToDictionary();
-            Assert.Empty(map.Forward);
+            var map = new BiMap<int, int>();
 
-            forwardMap.Add(1, 1);
-            Assert.Empty(map.Forward);
+            var dictionary = map.Direct.ToDictionary();
+            dictionary.Add(1, 1);
 
-            var reverseMap = map.Reverse.ToDictionary();
-            reverseMap.Add(1, 1);
+            Assert.Empty(map.Direct);
+
+            var reversedDictionary = map.Reverse.ToDictionary();
+            reversedDictionary.Add(1, 1);
+
             Assert.Empty(map.Reverse);
         }
 
@@ -146,55 +120,47 @@ namespace System.Collections.Generic.Tests
         {
             var map = new BiMap<int, string>
             {
-                {1, "1" },
-                {2, "2" },
-                {3, "3" },
+                { 1, "1" },
+                { 2, "2" },
             };
 
-            var forwardKeys = new[] { 1, 2, 3 };
-            var reverseKeys = new[] { "1", "2", "3" };
-            Assert.Equal(forwardKeys, map.Forward.Keys);
+            var forwardKeys = new[] { 1, 2 };
+            Assert.Equal(forwardKeys, map.Direct.Keys);
             Assert.Equal(forwardKeys, map.Reverse.Values);
 
+            var reverseKeys = new[] { "1", "2" };
             Assert.Equal(reverseKeys, map.Reverse.Keys);
-            Assert.Equal(reverseKeys, map.Forward.Values);
+            Assert.Equal(reverseKeys, map.Direct.Values);
         }
-
 
         [Fact]
         public void Constructor_InstantiateValid()
         {
-            var dict = new Dictionary<int, string>
+            var dictionary = new Dictionary<int, string>
             {
-                {1, "1" },
-                {2, "2" },
-                {3, "3" },
+                { 1, "1" },
+                { 2, "2" },
             };
-            BiMap<int, string> map = new BiMap<int, string>(dict);
 
-            Assert.Equal(3, map.Count());
-            Assert.Equal("1", map.Forward[1]);
-            Assert.Equal("2", map.Forward[2]);
-            Assert.Equal("3", map.Forward[3]);
+            var map = new BiMap<int, string>(dictionary);
+
+            Assert.Equal(dictionary.Count, map.Count);
+            Assert.Equal("1", map.Direct[1]);
+            Assert.Equal("2", map.Direct[2]);
             Assert.Equal(1, map.Reverse["1"]);
             Assert.Equal(2, map.Reverse["2"]);
-            Assert.Equal(3, map.Reverse["3"]);
         }
 
         [Fact]
         public void Constructor_DuplicatKey()
         {
-            Assert.Throws<ArgumentException>(() =>
+            var dictionary = new Dictionary<int, string>
             {
-                var dict = new Dictionary<int, string>
-                {
-                    {1, "1" },
-                    {1, "2" },
-                };
+                { 1, "1" },
+                { 2, "1" },
+            };
 
-                BiMap<int, string> map = new BiMap<int, string>(dict);
-            });
-
+            Assert.Throws<ArgumentException>(() => new BiMap<int, string>(dictionary));
         }
 
         [Fact]
@@ -209,32 +175,12 @@ namespace System.Collections.Generic.Tests
             };
 
             Assert.Equal(3, map.Count());
-            Assert.Equal("1", map.Forward[1]);
-            Assert.Equal("2", map.Forward[2]);
-            Assert.Equal("3", map.Forward[3]);
+            Assert.Equal("1", map.Direct[1]);
+            Assert.Equal("2", map.Direct[2]);
+            Assert.Equal("3", map.Direct[3]);
             Assert.Equal(1, map.Reverse["1"]);
             Assert.Equal(2, map.Reverse["2"]);
             Assert.Equal(3, map.Reverse["3"]);
         }
-
-        [Fact]
-        public void Initializer_DuplicatKey()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var dict = new BiMap<int, string>
-                {
-                    {1, "1" },
-                    {1, "2" },
-                };
-
-            });
-
-        }
-
-
-        //NOTE: Property tests move to F# for easier value-based equality and fluent property definition
-
-        
     }
 }

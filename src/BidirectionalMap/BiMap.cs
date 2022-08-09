@@ -2,158 +2,110 @@
 
 namespace System.Collections.Generic
 {
-    public class BiMap<TForwardKey, TReverseKey>: IEnumerable<KeyValuePair<TForwardKey, TReverseKey>>
+    /// <summary>
+    /// Represents a two-way dictionary with accessing elements by direct and reverse keys.
+    /// </summary>
+    /// <typeparam name="TDirectKey">The type of the direct keys.</typeparam>
+    /// <typeparam name="TReverseKey">The type of the reverse keys.</typeparam>
+    public partial class BiMap<TDirectKey, TReverseKey>: ICollection<KeyValuePair<TDirectKey, TReverseKey>>, ICollection, IEnumerable<KeyValuePair<TDirectKey, TReverseKey>>, IEnumerable
     {
-        public Indexer<TForwardKey, TReverseKey> Forward { get; private set; } = new Indexer<TForwardKey, TReverseKey>();
-        public Indexer<TReverseKey, TForwardKey> Reverse { get; private set; } = new Indexer<TReverseKey, TForwardKey>();
+        /// <summary>
+        /// Gets the read-only direct element indexer.
+        /// </summary>
+        public Indexer<TDirectKey, TReverseKey> Direct { get; }
 
-        const string DuplicateKeyErrorMessage = "";
+        /// <summary>
+        /// Gets read-only reverse element indexer.
+        /// </summary>
+        public Indexer<TReverseKey, TDirectKey> Reverse { get; }
+
+        public int Count => Direct.Count;
+        bool ICollection<KeyValuePair<TDirectKey, TReverseKey>>.IsReadOnly => false;
+        bool ICollection.IsSynchronized => ((ICollection)Direct).IsSynchronized;
+        object ICollection.SyncRoot => ((ICollection)Direct).SyncRoot;
 
         public BiMap()
         {
-        }
-        public BiMap(IDictionary<TForwardKey, TReverseKey> oneWayMap)
-        {
-            Forward = new Indexer<TForwardKey, TReverseKey>(oneWayMap);
-            var reversedOneWayMap = oneWayMap.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
-            Reverse = new Indexer<TReverseKey, TForwardKey>(reversedOneWayMap);
+            Direct  = new Indexer<TDirectKey, TReverseKey>();
+            Reverse = new Indexer<TReverseKey, TDirectKey>();
         }
 
-        public void Add(TForwardKey t1, TReverseKey t2)
+        public BiMap(IDictionary<TDirectKey, TReverseKey> dictionary)
         {
-            if (Forward.ContainsKey(t1))
-                throw new ArgumentException(DuplicateKeyErrorMessage, nameof(t1));
-            if (Reverse.ContainsKey(t2))
-                throw new ArgumentException(DuplicateKeyErrorMessage, nameof(t2));
+            if (dictionary is null)
+                throw new ArgumentNullException(nameof(dictionary));
 
-            Forward.Add(t1, t2);
-            Reverse.Add(t2, t1);
-        }
+            var reversedDictionary = dictionary.ToDictionary(pair => pair.Value, pair => pair.Key);
 
-        public bool Remove(TForwardKey forwardKey)
-        {
-            if (Forward.ContainsKey(forwardKey) == false) return false;
-            var reverseKey = Forward[forwardKey];
-            bool success;
-            if (Forward.Remove(forwardKey))
-            {
-                if (Reverse.Remove(reverseKey))
-                {
-                    success = true;
-                }
-                else
-                {
-                    Forward.Add(forwardKey, reverseKey);
-                    success = false;
-                }
-            }
-            else
-            {
-                success = false;
-            }
-
-            return success;
-        }
-
-        public int Count()
-        {
-            return Forward.Count();
-        }
-
-        IEnumerator<KeyValuePair<TForwardKey, TReverseKey>> IEnumerable<KeyValuePair<TForwardKey, TReverseKey>>.GetEnumerator()
-        {
-            return Forward.GetEnumerator();
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return Forward.GetEnumerator();
+            Direct  = new Indexer<TDirectKey, TReverseKey>(dictionary);
+            Reverse = new Indexer<TReverseKey, TDirectKey>(reversedDictionary);
         }
 
         /// <summary>
-        /// Publically read-only lookup to prevent inconsistent state between forward and reverse map lookups
+        /// TODO
         /// </summary>
-        /// <typeparam name="Key"></typeparam>
-        /// <typeparam name="Value"></typeparam>
-        public class Indexer<Key, Value> : IEnumerable<KeyValuePair<Key, Value>>
+        /// <param name="directKey"></param>
+        /// <param name="reverseKey"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public void Add(TDirectKey directKey, TReverseKey reverseKey)
         {
-            private IDictionary<Key, Value> _dictionary;
+            if (Direct.ContainsKey(directKey))
+                throw new ArgumentException("The key already exists in the collection.", nameof(directKey));
 
-            public Indexer()
-            {
-                _dictionary = new Dictionary<Key, Value>();
-            }
-            public Indexer(IDictionary<Key, Value> dictionary)
-            {
-                _dictionary = dictionary;
-            }
-            public Value this[Key index]
-            {
-                get { return _dictionary[index]; }
-            }
+            if (Reverse.ContainsKey(reverseKey))
+                throw new ArgumentException("The key already exists in the collection.", nameof(reverseKey));
 
-            public static implicit operator Dictionary<Key, Value>(Indexer<Key, Value> indexer)
-            {
-                return new Dictionary<Key, Value>(indexer._dictionary);
-            }
-
-            internal void Add(Key key, Value value)
-            {
-                _dictionary.Add(key, value);
-            }
-
-            internal bool Remove(Key key)
-            {
-                return _dictionary.Remove(key);
-            }
-
-            internal int Count()
-            {
-                return _dictionary.Count;
-            }
-
-            public bool ContainsKey(Key key)
-            {
-                return _dictionary.ContainsKey(key);
-            }
-
-            public IEnumerable<Key> Keys
-            {
-                get { 
-                    return _dictionary.Keys;
-                }
-            }
-
-            public IEnumerable<Value> Values
-            {
-                get
-                {
-                    return _dictionary.Values;
-                }
-            }
-
-            /// <summary>
-            /// Deep copy lookup as a dictionary
-            /// </summary>
-            /// <returns></returns>
-            public Dictionary<Key, Value> ToDictionary()
-            {
-                return new Dictionary<Key, Value>(_dictionary);
-            }
-
-            public IEnumerator<KeyValuePair<Key, Value>> GetEnumerator()
-            {
-                return _dictionary.GetEnumerator();
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return _dictionary.GetEnumerator();
-            }
+            Direct.AddInternal(directKey, reverseKey);
+            Reverse.AddInternal(reverseKey, directKey);
         }
 
-        
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="directKey"></param>
+        /// <param name="reverseKey"></param>
+        /// <returns></returns>
+        public bool Remove(TDirectKey directKey, out TReverseKey reverseKey)
+        {
+            if(Direct.RemoveInternal(directKey, out reverseKey))
+                return Reverse.RemoveInternal(reverseKey); // always true
+            else
+                return false;
+        }
 
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="directKey"></param>
+        /// <returns></returns>
+        public bool Remove(TDirectKey directKey) => Remove(directKey, out _);
+
+        public IEnumerator<KeyValuePair<TDirectKey, TReverseKey>> GetEnumerator() =>
+            Direct.GetEnumerator();
+
+        public void Clear()
+        {
+            Direct.ClearInternal();
+            Reverse.ClearInternal();
+        }
+
+        public bool Contains(KeyValuePair<TDirectKey, TReverseKey> item) => Direct.Contains(item);
+
+        public bool Remove(KeyValuePair<TDirectKey, TReverseKey> item)
+        {
+            if (Direct.TryGetValue(item.Key, out var reversedKey) && Comparer.Default.Compare(item, reversedKey) == 0)
+                return Direct.RemoveInternal(item.Key) & Reverse.RemoveInternal(reversedKey); // shoud be true
+            else
+                return false;
+        }
+
+        public void CopyTo(KeyValuePair<TDirectKey, TReverseKey>[] array, int arrayIndex) =>
+            ((ICollection)Direct).CopyTo(array, arrayIndex);
+
+        public void Add(KeyValuePair<TDirectKey, TReverseKey> item) => Add(item.Key, item.Value);
         
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)Direct).CopyTo(array, index);
+        
+        IEnumerator IEnumerable.GetEnumerator() => Direct.GetEnumerator();
     }
 }

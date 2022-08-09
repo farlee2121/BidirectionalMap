@@ -26,19 +26,19 @@ let ``All initialization methods create the same map`` (mapVals) =
 [<Property>]
 let ``forward set = reverse set`` (mapVals) =
     let map = new BiMap<int, Guid>(mapVals)
-    map.Forward |= (map.Reverse |> Seq.map KeyValuePair.reverse)
+    map.Direct |= (map.Reverse |> Seq.map KeyValuePair.reverse)
 
 [<Property>]
 let ``One to one`` (mapVals) =
     let map = new BiMap<int, Guid>(mapVals)
-    map.Forward.Keys
-        |>  Seq.forall (fun key -> key = map.Reverse.[map.Forward.[key]])
+    map.Direct.Keys
+        |>  Seq.forall (fun key -> key = map.Reverse.[map.Direct.[key]])
     && map.Reverse.Keys
-        |>  Seq.forall (fun key -> key = map.Forward.[map.Reverse.[key]])
+        |>  Seq.forall (fun key -> key = map.Direct.[map.Reverse.[key]])
 
 [<Property>]
 let ``Top-level as set equals forward set`` (mapVals) =
     let map = new BiMap<int, Guid>(mapVals)
-    map |= map.Forward
+    map |= map.Direct
 
 // ?? after remove, neither set contains the key??
