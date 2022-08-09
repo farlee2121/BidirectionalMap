@@ -9,9 +9,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "BidirectionalMap.PropertyTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidirectionalMap", "src\BidirectionalMap\BidirectionalMap.csproj", "{A1624B8B-08B9-4602-88C0-344369622742}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BidirectionalMap.Serialization.Json", "BidirectionalMap.Serialization.Json\BidirectionalMap.Serialization.Json.csproj", "{B23C332B-3A76-4D37-B3E8-460E720448B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BidirectionalMap.Serialization.Json", "src\BidirectionalMap.Serialization.Json\BidirectionalMap.Serialization.Json.csproj", "{B23C332B-3A76-4D37-B3E8-460E720448B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BidirectionalMap.Serialization.Json.Tests", "BidirectionalMap.Serialization.Json.Tests\BidirectionalMap.Serialization.Json.Tests.csproj", "{8F456C2D-93BB-40F1-8EBD-1F60821DBCCD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BidirectionalMap.Serialization.Json.Tests", "tests\BidirectionalMap.Serialization.Json.Tests\BidirectionalMap.Serialization.Json.Tests.csproj", "{8F456C2D-93BB-40F1-8EBD-1F60821DBCCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

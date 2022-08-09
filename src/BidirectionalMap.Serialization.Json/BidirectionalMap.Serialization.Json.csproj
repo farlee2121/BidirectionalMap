@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\BidirectionalMap\BidirectionalMap.csproj" />
+    <ProjectReference Include="..\BidirectionalMap\BidirectionalMap.csproj" />
   </ItemGroup>
 
 </Project>

@@ -16,8 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BidirectionalMap.Serialization.Json\BidirectionalMap.Serialization.Json.csproj" />
-    <ProjectReference Include="..\src\BidirectionalMap\BidirectionalMap.csproj" />
+    <ProjectReference Include="..\..\src\BidirectionalMap.Serialization.Json\BidirectionalMap.Serialization.Json.csproj" />
   </ItemGroup>
 
 </Project>
