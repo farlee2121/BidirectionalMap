@@ -11,7 +11,7 @@ Exactly what it sounds like! This library offers a single class `BiMap` that let
 ```cs
 using System.Collections.Generic;
 
-var capitalCountryMap = new BiMap<int, string>()
+var capitalCountryMap = new BiMap<string, string>()
 {
     { "Italy", "Rome" },
     { "Mumbai", "India" },
