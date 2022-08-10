@@ -9,9 +9,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "BidirectionalMap.PropertyTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidirectionalMap", "src\BidirectionalMap\BidirectionalMap.csproj", "{A1624B8B-08B9-4602-88C0-344369622742}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BidirectionalMap.Serialization.Json", "src\BidirectionalMap.Serialization.Json\BidirectionalMap.Serialization.Json.csproj", "{B23C332B-3A76-4D37-B3E8-460E720448B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidirectionalMap.Json.Newtonsoft", "src\BidirectionalMap.Json.Newtonsoft\BidirectionalMap.Json.Newtonsoft.csproj", "{D9D40F44-48E9-4565-9699-670D5B879E73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BidirectionalMap.Serialization.Json.Tests", "tests\BidirectionalMap.Serialization.Json.Tests\BidirectionalMap.Serialization.Json.Tests.csproj", "{8F456C2D-93BB-40F1-8EBD-1F60821DBCCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidirectionalMap.Json.Newtonsoft.Tests", "tests\BidirectionalMap.Json.Newtonsoft.Tests\BidirectionalMap.Json.Newtonsoft.Tests.csproj", "{538461E4-9203-43CE-B850-AC550E94E364}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +31,14 @@ Global
 		{A1624B8B-08B9-4602-88C0-344369622742}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1624B8B-08B9-4602-88C0-344369622742}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1624B8B-08B9-4602-88C0-344369622742}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B23C332B-3A76-4D37-B3E8-460E720448B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B23C332B-3A76-4D37-B3E8-460E720448B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B23C332B-3A76-4D37-B3E8-460E720448B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B23C332B-3A76-4D37-B3E8-460E720448B3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8F456C2D-93BB-40F1-8EBD-1F60821DBCCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F456C2D-93BB-40F1-8EBD-1F60821DBCCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F456C2D-93BB-40F1-8EBD-1F60821DBCCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F456C2D-93BB-40F1-8EBD-1F60821DBCCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9D40F44-48E9-4565-9699-670D5B879E73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9D40F44-48E9-4565-9699-670D5B879E73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9D40F44-48E9-4565-9699-670D5B879E73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9D40F44-48E9-4565-9699-670D5B879E73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{538461E4-9203-43CE-B850-AC550E94E364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{538461E4-9203-43CE-B850-AC550E94E364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{538461E4-9203-43CE-B850-AC550E94E364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{538461E4-9203-43CE-B850-AC550E94E364}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

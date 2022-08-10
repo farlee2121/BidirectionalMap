@@ -7,16 +7,14 @@
 
   <PropertyGroup>
     <!--Nuget Meta: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj -->
-    <PackageId>BidirectionalMap</PackageId>
+    <PackageId></PackageId>
     <Version>2.0.0</Version>
     <Title>Bidirectional Map</Title>
-    <Description>
-      A two-way dictionary for .NET Standard. Like a usual dictionary, but indexed both ways.
-    </Description>
+    <Description>A two-way dictionary for .NET Standard. Like a usual dictionary, but indexed both ways.</Description>
     <Authors>Spencer Farley, Ihor Kuzmychov</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/farlee2121/BidirectionalMap</RepositoryUrl>
-    <PackageTags>dotnet;dotnet-standard;lookup;map;bidirectional</PackageTags>
+    <PackageTags>dotnet-standard;lookup;map;bidirectional;dictionary;bimap</PackageTags>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
