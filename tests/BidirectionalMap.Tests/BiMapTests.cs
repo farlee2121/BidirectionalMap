@@ -104,12 +104,12 @@ namespace BidirectionalMap.Tests
         {
             var map = new BiMap<int, int>();
 
-            var dictionary = map.Direct.ToDictionary();
+            var dictionary = new Dictionary<int, int>(map.Direct);
             dictionary.Add(1, 1);
 
             Assert.Empty(map.Direct);
 
-            var reversedDictionary = map.Reverse.ToDictionary();
+            var reversedDictionary = new Dictionary<int, int>(map.Reverse);
             reversedDictionary.Add(1, 1);
 
             Assert.Empty(map.Reverse);
