@@ -8,7 +8,7 @@ namespace System.Collections.Generic
     /// </summary>
     /// <typeparam name="TDirectKey">The type of the direct keys.</typeparam>
     /// <typeparam name="TReverseKey">The type of the reverse keys.</typeparam>
-    public partial class BiMap<TDirectKey, TReverseKey>: IDictionary<TDirectKey, TReverseKey>, IDictionary, IReadOnlyDictionary<TDirectKey, TReverseKey>, ICollection<KeyValuePair<TDirectKey, TReverseKey>>, ICollection, IEnumerable<KeyValuePair<TDirectKey, TReverseKey>>, IEnumerable
+    public class BiMap<TDirectKey, TReverseKey>: IDictionary<TDirectKey, TReverseKey>, IDictionary, IReadOnlyDictionary<TDirectKey, TReverseKey>, ICollection<KeyValuePair<TDirectKey, TReverseKey>>, ICollection, IEnumerable<KeyValuePair<TDirectKey, TReverseKey>>, IEnumerable
     {
         private readonly Dictionary<TDirectKey, TReverseKey> _direct;
         private readonly Dictionary<TReverseKey, TDirectKey> _reverse;
@@ -26,7 +26,7 @@ namespace System.Collections.Generic
         public ReadOnlyDictionary<TReverseKey, TDirectKey> Reverse { get; }
 
         public int Count => _direct.Count;
-        bool ICollection.IsSynchronized => ((ICollection)_direct).IsSynchronized;
+        bool ICollection.IsSynchronized => false;
         object ICollection.SyncRoot => ((ICollection)_direct).SyncRoot;
         bool ICollection<KeyValuePair<TDirectKey, TReverseKey>>.IsReadOnly => false;
         ICollection<TDirectKey> IDictionary<TDirectKey, TReverseKey>.Keys => _direct.Keys;
@@ -36,6 +36,12 @@ namespace System.Collections.Generic
             get => Direct[directKey];
             set
             {
+                if (directKey is null)
+                    throw new ArgumentNullException(nameof(value));
+
+                if (value is null)
+                    throw new ArgumentNullException(nameof(value));
+
                 var reverseKey = value;
 
                 if (Direct.TryGetValue(directKey, out var oldReverseKey))
@@ -69,14 +75,29 @@ namespace System.Collections.Generic
         bool IDictionary.IsReadOnly => false;
         bool IDictionary.IsFixedSize => false;
         object IDictionary.this[object directKey]
-        { 
-            get => ((IDictionary)Direct)[directKey];
-            set
+        {
+            get
             {
+                if (directKey is null)
+                    throw new ArgumentNullException(nameof(directKey));
+                
                 if (!(directKey is TDirectKey))
                     throw new ArgumentException("The direct key type is incorrect.", nameof(directKey));
 
-                if (!(value is TDirectKey))
+                return ((IDictionary<TDirectKey, TReverseKey>)this)[(TDirectKey)directKey]!;
+            }
+            set
+            {
+                if (directKey is null)
+                    throw new ArgumentNullException(nameof(directKey));
+
+                if (value is null)
+                    throw new ArgumentNullException(nameof(value));
+
+                if (!(directKey is TDirectKey))
+                    throw new ArgumentException("The direct key type is incorrect.", nameof(directKey));
+
+                if (!(value is TReverseKey))
                     throw new ArgumentException("The reverse key type is incorrect.", nameof(value));
 
                 ((IDictionary<TDirectKey, TReverseKey>)this)[(TDirectKey)directKey] = (TReverseKey)value;
@@ -150,17 +171,24 @@ namespace System.Collections.Generic
             _reverse.Clear();
         }
 
-        public bool Contains(KeyValuePair<TDirectKey, TReverseKey> item) => _direct.Contains(item);
-
         public IEnumerator GetEnumerator() => Direct.GetEnumerator();
 
         IEnumerator<KeyValuePair<TDirectKey, TReverseKey>> IEnumerable<KeyValuePair<TDirectKey, TReverseKey>>.GetEnumerator() =>
             _direct.GetEnumerator();
         
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)_direct).CopyTo(array, index);        
-        
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_direct).CopyTo(array, index);
+
+        void ICollection<KeyValuePair<TDirectKey, TReverseKey>>.Add(KeyValuePair<TDirectKey, TReverseKey> item) =>
+            Add(item.Key, item.Value);
+
         bool ICollection<KeyValuePair<TDirectKey, TReverseKey>>.Remove(KeyValuePair<TDirectKey, TReverseKey> item)
         {
+            if (item.Key is null)
+                throw new ArgumentNullException(nameof(item), "Item key is null");
+            
+            if (item.Value is null)
+                throw new ArgumentNullException(nameof(item), "Item value is null");
+
             if (((ICollection<KeyValuePair<TDirectKey, TReverseKey>>)_direct).Remove(item))
             {
                 _reverse.Remove(item.Value);
@@ -171,13 +199,20 @@ namespace System.Collections.Generic
                 return false;
             }
         }
-       
+
+        bool ICollection<KeyValuePair<TDirectKey, TReverseKey>>.Contains(KeyValuePair<TDirectKey, TReverseKey> item)
+        {
+            if (item.Key is null)
+                throw new ArgumentNullException(nameof(item), "Item key is null");
+
+            if (item.Value is null)
+                throw new ArgumentNullException(nameof(item), "Item value is null");
+
+            return _direct.Contains(item);
+        }
 
         void ICollection<KeyValuePair<TDirectKey, TReverseKey>>.CopyTo(KeyValuePair<TDirectKey, TReverseKey>[] array, int arrayIndex) =>
             ((ICollection<KeyValuePair<TDirectKey, TReverseKey>>)_direct).CopyTo(array, arrayIndex);
-
-        void ICollection<KeyValuePair<TDirectKey, TReverseKey>>.Add(KeyValuePair<TDirectKey, TReverseKey> item) =>
-            Add(item.Key, item.Value);        
 
         bool IReadOnlyDictionary<TDirectKey, TReverseKey>.ContainsKey(TDirectKey key) => _direct.ContainsKey(key);
 
@@ -191,17 +226,37 @@ namespace System.Collections.Generic
 
         void IDictionary.Add(object directKey, object reverseKey)
         {
+            if (directKey is null)
+                throw new ArgumentNullException(nameof(directKey));
+
+            if (reverseKey is null)
+                throw new ArgumentNullException(nameof(reverseKey));
+
             if (!(directKey is TDirectKey))
                 throw new ArgumentException("The direct key type is incorrect.", nameof(directKey));
 
-            if (!(reverseKey is TDirectKey))
+            if (!(reverseKey is TReverseKey))
                 throw new ArgumentException("The reverse key type is incorrect.", nameof(directKey));
 
             Add((TDirectKey)directKey, (TReverseKey)reverseKey);
         }
 
+        void IDictionary.Remove(object directKey)
+        {
+            if (directKey is null)
+                throw new ArgumentNullException(nameof(directKey));
+
+            if (!(directKey is TDirectKey))
+                throw new ArgumentException("The direct key type is incorrect.", nameof(directKey));
+
+            Remove((TDirectKey)directKey);
+        }
+
         bool IDictionary.Contains(object directKey)
         {
+            if (directKey is null)
+                throw new ArgumentNullException(nameof(directKey));
+
             if (!(directKey is TDirectKey))
                 throw new ArgumentException("The direct key type is incorrect.", nameof(directKey));
 
@@ -209,14 +264,6 @@ namespace System.Collections.Generic
         }
 
         IDictionaryEnumerator IDictionary.GetEnumerator() => _direct.GetEnumerator();
-
-        void IDictionary.Remove(object directKey)
-        {
-            if (!(directKey is TDirectKey))
-                throw new ArgumentException("The direct key type is incorrect.", nameof(directKey));
-
-            _direct.Remove((TDirectKey)directKey);
-        }
 
         #endregion
     }

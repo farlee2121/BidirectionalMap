@@ -1,10 +1,8 @@
 module Tests
 
 open System
-open Xunit
 open FsCheck.Xunit
 open System.Collections.Generic
-open FsCheck
 
 let (|=) left right = (Array.ofSeq left) = (Array.ofSeq right) 
 

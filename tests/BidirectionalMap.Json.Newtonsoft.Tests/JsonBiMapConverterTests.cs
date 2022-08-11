@@ -8,7 +8,7 @@ namespace BidirectionalMap.Serialization.Json.Tests;
 public class JsonBiMapConverterTests
 {
     [TestMethod]
-    public void Serialize_NullBiMap_NullJsonValue()
+    public void Serialize_NullMap_NullJsonValue()
     {
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new JsonBiMapConverter<char, int>());
@@ -20,7 +20,7 @@ public class JsonBiMapConverterTests
     }
 
     [TestMethod]
-    public void Serialize_FilledBiMap_CorrectJson()
+    public void Serialize_FilledMap_CorrectJson()
     {
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new JsonBiMapConverter<char, int>());
@@ -39,7 +39,7 @@ public class JsonBiMapConverterTests
     }
 
     [TestMethod]
-    public void Serialize_FilledBiMapFromDictionary_BiMapJsonEqualsDictionaryJson()
+    public void Serialize_FilledMapFromDictionary_BiMapJsonEqualsDictionaryJson()
     {
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new JsonBiMapConverter<char, int>());
@@ -59,7 +59,7 @@ public class JsonBiMapConverterTests
     }
 
     [TestMethod]
-    public void Deserialize_NullJsonValue_NullBiMap()
+    public void Deserialize_NullJsonValue_NullMap()
     {
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new JsonBiMapConverter<char, int>());
@@ -71,7 +71,7 @@ public class JsonBiMapConverterTests
     }
 
     [TestMethod]
-    public void Deserialize_FilledBiMapJson_CorrectBiMap()
+    public void Deserialize_FilledBiMapJson_CorrectMap()
     {
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new JsonBiMapConverter<char, int>());
@@ -93,7 +93,7 @@ public class JsonBiMapConverterTests
     }
 
     [TestMethod]
-    public void Deserialize_FilledDictionaryJson_BiMapEqualsDictionary()
+    public void Deserialize_FilledDictionaryJson_MapEqualsDictionary()
     {
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new JsonBiMapConverter<char, int>());
