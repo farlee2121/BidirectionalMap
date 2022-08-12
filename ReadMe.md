@@ -13,23 +13,15 @@ Example:
 ```cs
 using BidirectionalMap;
 
-BiMap<int, string> map = new BiMap<int, string>(){
-	{1, "Circle"},
-	{2, "Triangle"},
-	{3, "Square"},
+var capitalCountryMap = new BiMap<string, string>()
+{
+    { "Italy", "Rome" },
+    { "Mumbai", "India" },
+    { "USA", "Washington, D.C." },
 };
 
-var mappedString = map.Forward[1]; //"Circle"
-var mappedInt = map.Reverse["Circle"]; // 1
-```
-
-It isn't limited to value types
-```cs
-BiMap<int, Action> map = new BiMap<int, Action>(){
-	{1, () => /* do something*/},
-};
-
-var action = map.Forward[1]; 
+var captial = map.Forward["USA"]); // "Washington, D.C."
+var country = map.Reverse["Washington, D.C."]; // "USA"
 ```
 
 Why?
