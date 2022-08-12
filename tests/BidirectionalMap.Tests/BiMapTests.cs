@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace BidirectionalMap.Tests;
+namespace BiforwardionalMap.Tests;
 
 [TestClass]
 public class BiMapTests
@@ -13,7 +13,7 @@ public class BiMapTests
         var map = new BiMap<char, int>();
 
         Assert.AreEqual(0, map.Count);
-        Assert.AreEqual(0, map.Direct.Count);
+        Assert.AreEqual(0, map.Forward.Count);
         Assert.AreEqual(0, map.Reverse.Count);
     }
 
@@ -37,9 +37,9 @@ public class BiMapTests
 
         Assert.AreEqual(dictionary.Count, map.Count);
         
-        Assert.AreEqual(dictionary.Count, map.Direct.Count);
-        CollectionAssert.AreEqual(dictionary.Keys, map.Direct.Keys);
-        CollectionAssert.AreEqual(dictionary.Values, map.Direct.Values);
+        Assert.AreEqual(dictionary.Count, map.Forward.Count);
+        CollectionAssert.AreEqual(dictionary.Keys, map.Forward.Keys);
+        CollectionAssert.AreEqual(dictionary.Values, map.Forward.Values);
 
         Assert.AreEqual(dictionary.Count, map.Reverse.Count);
         CollectionAssert.AreEqual(dictionary.Keys, map.Reverse.Values);
@@ -68,7 +68,7 @@ public class BiMapTests
     [DataRow('c', 2)]
     [DataRow('d', 2)]
     [DataRow('e', 3)]
-    public void Add_FilledMapAndNonDuplicateKeys_AddsKeysSuccessfully(char directKey, int reverseKey)
+    public void Add_FilledMapAndNonDuplicateKeys_AddsKeysSuccessfully(char forwardKey, int reverseKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -76,34 +76,34 @@ public class BiMapTests
             { 'b', 1 },
         };
 
-        map.Add(directKey, reverseKey);
+        map.Add(forwardKey, reverseKey);
 
         Assert.AreEqual(3, map.Count);
 
-        Assert.AreEqual(3, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
-        Assert.AreEqual(reverseKey, map.Direct[directKey]);
+        Assert.AreEqual(3, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
+        Assert.AreEqual(reverseKey, map.Forward[forwardKey]);
 
         Assert.AreEqual(3, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
         Assert.AreEqual('b', map.Reverse[1]);
-        Assert.AreEqual(directKey, map.Reverse[reverseKey]);
+        Assert.AreEqual(forwardKey, map.Reverse[reverseKey]);
     }
 
     [TestMethod]
     [DataRow(null, null)]
     [DataRow(null, 0)]
     [DataRow('a', null)]
-    public void Add_EmptyMapAndNullKeys_ThrowsArgumentNullException(char? directKey, int? reverseKey)
+    public void Add_EmptyMapAndNullKeys_ThrowsArgumentNullException(char? forwardKey, int? reverseKey)
     {
         var map = new BiMap<char?, int?>();
 
-        Assert.ThrowsException<ArgumentNullException>(() => map.Add(directKey, reverseKey));
+        Assert.ThrowsException<ArgumentNullException>(() => map.Add(forwardKey, reverseKey));
 
         // checking that nothing has changed
         Assert.AreEqual(0, map.Count);
-        Assert.AreEqual(0, map.Direct.Count);
+        Assert.AreEqual(0, map.Forward.Count);
         Assert.AreEqual(0, map.Reverse.Count);
     }
 
@@ -116,7 +116,7 @@ public class BiMapTests
     [DataRow('b', 2)]
     [DataRow('c', 0)]
     [DataRow('c', 1)]
-    public void Add_FilledMapAndDuplicateKeys_ThrowsArgumentException(char directKey, int reverseKey)
+    public void Add_FilledMapAndDuplicateKeys_ThrowsArgumentException(char forwardKey, int reverseKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -124,14 +124,14 @@ public class BiMapTests
             { 'b', 1 },
         };
 
-        Assert.ThrowsException<ArgumentException>(() => map.Add(directKey, reverseKey));
+        Assert.ThrowsException<ArgumentException>(() => map.Add(forwardKey, reverseKey));
 
         // checking that nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -146,7 +146,7 @@ public class BiMapTests
     [DataRow('c', 2)]
     [DataRow('d', 2)]
     [DataRow('e', 3)]
-    public void GenericICollectionAdd_FilledMapAndNonDuplicateKeys_AddsKeysSuccessfully(char directKey, int reverseKey)
+    public void GenericICollectionAdd_FilledMapAndNonDuplicateKeys_AddsKeysSuccessfully(char forwardKey, int reverseKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -155,38 +155,38 @@ public class BiMapTests
         };
         
         var mapAsGenericICollection = ((ICollection<KeyValuePair<char, int>>)map);
-        var item                    = new KeyValuePair<char, int>(directKey, reverseKey);
+        var item                    = new KeyValuePair<char, int>(forwardKey, reverseKey);
 
         mapAsGenericICollection.Add(item);
 
         Assert.AreEqual(3, map.Count);
 
-        Assert.AreEqual(3, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
-        Assert.AreEqual(reverseKey, map.Direct[directKey]);
+        Assert.AreEqual(3, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
+        Assert.AreEqual(reverseKey, map.Forward[forwardKey]);
 
         Assert.AreEqual(3, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
         Assert.AreEqual('b', map.Reverse[1]);
-        Assert.AreEqual(directKey, map.Reverse[reverseKey]);
+        Assert.AreEqual(forwardKey, map.Reverse[reverseKey]);
     }
 
     [TestMethod]
     [DataRow(null, null)]
     [DataRow(null, 0)]
     [DataRow('a', null)]
-    public void GenericICollectionAdd_EmptyMapAndNullKeys_ThrowsArgumentNullException(char? directKey, int? reverseKey)
+    public void GenericICollectionAdd_EmptyMapAndNullKeys_ThrowsArgumentNullException(char? forwardKey, int? reverseKey)
     {
         var map = new BiMap<char?, int?>();
         var mapAsGenericICollection = ((ICollection<KeyValuePair<char?, int?>>)map);
-        var item = new KeyValuePair<char?, int?>(directKey, reverseKey);
+        var item = new KeyValuePair<char?, int?>(forwardKey, reverseKey);
 
         Assert.ThrowsException<ArgumentNullException>(() => mapAsGenericICollection.Add(item));
 
         // checking that nothing has changed
         Assert.AreEqual(0, map.Count);
-        Assert.AreEqual(0, map.Direct.Count);
+        Assert.AreEqual(0, map.Forward.Count);
         Assert.AreEqual(0, map.Reverse.Count);
     }
 
@@ -199,7 +199,7 @@ public class BiMapTests
     [DataRow('b', 2)]
     [DataRow('c', 0)]
     [DataRow('c', 1)]
-    public void GenericICollectionAdd_FilledMapAndDuplicateKeys_ThrowsArgumentException(char directKey, int reverseKey)
+    public void GenericICollectionAdd_FilledMapAndDuplicateKeys_ThrowsArgumentException(char forwardKey, int reverseKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -208,16 +208,16 @@ public class BiMapTests
         };
 
         var mapAsGenericICollection = ((ICollection<KeyValuePair<char, int>>)map);
-        var item                    = new KeyValuePair<char, int>(directKey, reverseKey);
+        var item                    = new KeyValuePair<char, int>(forwardKey, reverseKey);
 
         Assert.ThrowsException<ArgumentException>(() => mapAsGenericICollection.Add(item));
 
         // checking that nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -232,7 +232,7 @@ public class BiMapTests
     [DataRow('c', 2)]
     [DataRow('d', 2)]
     [DataRow('e', 3)]
-    public void IDictionaryAdd_FilledMapAndNonDuplicateKeys_AddsKeysSuccessfully(object directKey, object reverseKey)
+    public void IDictionaryAdd_FilledMapAndNonDuplicateKeys_AddsKeysSuccessfully(object forwardKey, object reverseKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -242,35 +242,35 @@ public class BiMapTests
 
         var mapAsIDictionary = ((IDictionary)map);
 
-        mapAsIDictionary.Add(directKey, reverseKey);
+        mapAsIDictionary.Add(forwardKey, reverseKey);
 
         Assert.AreEqual(3, map.Count);
 
-        Assert.AreEqual(3, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
-        Assert.AreEqual(reverseKey, map.Direct[(char)directKey]);
+        Assert.AreEqual(3, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
+        Assert.AreEqual(reverseKey, map.Forward[(char)forwardKey]);
 
         Assert.AreEqual(3, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
         Assert.AreEqual('b', map.Reverse[1]);
-        Assert.AreEqual(directKey, map.Reverse[(int)reverseKey]);
+        Assert.AreEqual(forwardKey, map.Reverse[(int)reverseKey]);
     }
 
     [TestMethod]
     [DataRow(null, null)]
     [DataRow(null, 0)]
     [DataRow('a', null)]
-    public void IDictionaryAdd_EmptyMapAndNullKeys_ThrowsArgumentNullException(object? directKey, object? reverseKey)
+    public void IDictionaryAdd_EmptyMapAndNullKeys_ThrowsArgumentNullException(object? forwardKey, object? reverseKey)
     {
         var map = new BiMap<char?, int?>();
         var mapAsIDictionary = ((IDictionary)map);
 
-        Assert.ThrowsException<ArgumentNullException>(() => mapAsIDictionary.Add(directKey!, reverseKey));
+        Assert.ThrowsException<ArgumentNullException>(() => mapAsIDictionary.Add(forwardKey!, reverseKey));
 
         // checking that nothing has changed
         Assert.AreEqual(0, map.Count);
-        Assert.AreEqual(0, map.Direct.Count);
+        Assert.AreEqual(0, map.Forward.Count);
         Assert.AreEqual(0, map.Reverse.Count);
     }
 
@@ -283,7 +283,7 @@ public class BiMapTests
     [DataRow('b', 2)]
     [DataRow('c', 0)]
     [DataRow('c', 1)]
-    public void IDictionaryAdd_FilledMapAndDuplicateKeys_ThrowsArgumentException(object directKey, object reverseKey)
+    public void IDictionaryAdd_FilledMapAndDuplicateKeys_ThrowsArgumentException(object forwardKey, object reverseKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -293,14 +293,14 @@ public class BiMapTests
 
         var mapAsIDictionary = ((IDictionary)map);
 
-        Assert.ThrowsException<ArgumentException>(() => mapAsIDictionary.Add(directKey, reverseKey));
+        Assert.ThrowsException<ArgumentException>(() => mapAsIDictionary.Add(forwardKey, reverseKey));
 
         // checking that nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -311,16 +311,16 @@ public class BiMapTests
     [DataRow(0, 0)]
     [DataRow('a', 'a')]
     [DataRow("", 0f)]
-    public void IDictionaryAdd_EmptyMapAndInvalidTypeKeys_ThrowsArgumentException(object directKey, object reverseKey)
+    public void IDictionaryAdd_EmptyMapAndInvalidTypeKeys_ThrowsArgumentException(object forwardKey, object reverseKey)
     {
         var map              = new BiMap<char, int>();
         var mapAsIDictionary = (IDictionary)map;
 
-        Assert.ThrowsException<ArgumentException>(() => mapAsIDictionary.Add(directKey, reverseKey));
+        Assert.ThrowsException<ArgumentException>(() => mapAsIDictionary.Add(forwardKey, reverseKey));
 
         // checking that nothing has changed
         Assert.AreEqual(0, map.Count);
-        Assert.AreEqual(0, map.Direct.Count);
+        Assert.AreEqual(0, map.Forward.Count);
         Assert.AreEqual(0, map.Reverse.Count);
     }
 
@@ -332,7 +332,7 @@ public class BiMapTests
     [DataRow('a', 0)]
     [DataRow('b', 1)]
     public void Remove_FilledMapAndExistingKeys_RemovesKeysSuccessfullyAndReturnsTrueAndReturnsOutExpectedReverseKey(
-        char directKey, int expectedReverseKey)
+        char forwardKey, int expectedReverseKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -340,21 +340,21 @@ public class BiMapTests
             { 'b', 1 },
         };
 
-        var isSuccessfullyRemoved = map.Remove(directKey, out var reverseKey);
+        var isSuccessfullyRemoved = map.Remove(forwardKey, out var reverseKey);
 
         Assert.IsTrue(isSuccessfullyRemoved);
         Assert.AreEqual(expectedReverseKey, reverseKey);
         Assert.AreEqual(1, map.Count);
 
-        Assert.AreEqual(1, map.Direct.Count);
-        Assert.IsFalse(map.Direct.ContainsKey(directKey));
+        Assert.AreEqual(1, map.Forward.Count);
+        Assert.IsFalse(map.Forward.ContainsKey(forwardKey));
 
         Assert.AreEqual(1, map.Reverse.Count);
         Assert.IsFalse(map.Reverse.ContainsKey(reverseKey));
     }
 
     [TestMethod]
-    public void Remove_FilledMapAndNullDirectKey_ThrowsArgumentNullException()
+    public void Remove_FilledMapAndNullForwardKey_ThrowsArgumentNullException()
     {
         var map = new BiMap<char?, int>()
         {
@@ -367,9 +367,9 @@ public class BiMapTests
         // checking that nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -379,7 +379,7 @@ public class BiMapTests
     [TestMethod]
     [DataRow('c')]
     [DataRow('d')]
-    public void Remove_FilledMapAndMissingKeys_ReturnsFalse(char directKey)
+    public void Remove_FilledMapAndMissingKeys_ReturnsFalse(char forwardKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -387,16 +387,16 @@ public class BiMapTests
             { 'b', 1 },
         };
 
-        var isSuccessfullyRemoved = map.Remove(directKey);
+        var isSuccessfullyRemoved = map.Remove(forwardKey);
 
         Assert.IsFalse(isSuccessfullyRemoved);
 
         // checking that nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -411,7 +411,7 @@ public class BiMapTests
     [DataRow('a', 0)]
     [DataRow('b', 1)]
     public void GenericICollectionRemove_FilledMapAndExistingKeys_RemovesKeysSuccessfullyAndReturnsTrue(
-        char directKey, int reverseKey)
+        char forwardKey, int reverseKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -420,15 +420,15 @@ public class BiMapTests
         };
         
         var mapAsGenericICollection = (ICollection<KeyValuePair<char, int>>)map;
-        var item                    = new KeyValuePair<char, int>(directKey, reverseKey);
+        var item                    = new KeyValuePair<char, int>(forwardKey, reverseKey);
 
         var isSuccessfullyRemoved = mapAsGenericICollection.Remove(item);
 
         Assert.IsTrue(isSuccessfullyRemoved);
         Assert.AreEqual(1, map.Count);
 
-        Assert.AreEqual(1, map.Direct.Count);
-        Assert.IsFalse(map.Direct.ContainsKey(directKey));
+        Assert.AreEqual(1, map.Forward.Count);
+        Assert.IsFalse(map.Forward.ContainsKey(forwardKey));
 
         Assert.AreEqual(1, map.Reverse.Count);
         Assert.IsFalse(map.Reverse.ContainsKey(reverseKey));
@@ -438,7 +438,7 @@ public class BiMapTests
     [DataRow(null, null)]
     [DataRow(null, 0)]
     [DataRow('a', null)]
-    public void GenericICollectionRemove_FilledMapAndNullKeys_ThrowsArgumentNullException(char? directKey, int? reverseKey)
+    public void GenericICollectionRemove_FilledMapAndNullKeys_ThrowsArgumentNullException(char? forwardKey, int? reverseKey)
     {
         var map = new BiMap<char?, int?>()
         {
@@ -447,16 +447,16 @@ public class BiMapTests
         };
 
         var mapAsGenericICollection = (ICollection<KeyValuePair<char?, int?>>)map;
-        var item                    = new KeyValuePair<char?, int?>(directKey, reverseKey);
+        var item                    = new KeyValuePair<char?, int?>(forwardKey, reverseKey);
 
         Assert.ThrowsException<ArgumentNullException>(() => mapAsGenericICollection.Remove(item));
 
         // checking that nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -468,7 +468,7 @@ public class BiMapTests
     [DataRow('b', 0)]
     [DataRow('c', 2)]
     [DataRow('d', 3)]
-    public void GenericICollectionRemove_FilledMapAndMissingKeys_ReturnsFalse(char directKey, int reverseKey)
+    public void GenericICollectionRemove_FilledMapAndMissingKeys_ReturnsFalse(char forwardKey, int reverseKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -477,7 +477,7 @@ public class BiMapTests
         };
 
         var mapAsGenericICollection = (ICollection<KeyValuePair<char, int>>)map;
-        var item                    = new KeyValuePair<char, int>(directKey, reverseKey);
+        var item                    = new KeyValuePair<char, int>(forwardKey, reverseKey);
 
         var isSuccessfullyRemoved = mapAsGenericICollection.Remove(item);
 
@@ -486,9 +486,9 @@ public class BiMapTests
         // checking that nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -502,7 +502,7 @@ public class BiMapTests
     [TestMethod]
     [DataRow('a')]
     [DataRow('b')]
-    public void IDictionaryRemove_FilledMapAndExistingKeys_RemovesKeysSuccessfully(object directKey)
+    public void IDictionaryRemove_FilledMapAndExistingKeys_RemovesKeysSuccessfully(object forwardKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -511,21 +511,21 @@ public class BiMapTests
         };
 
         var mapAsIDitionary = (IDictionary)map;
-        var reverseKey      = mapAsIDitionary[directKey]!;
+        var reverseKey      = mapAsIDitionary[forwardKey]!;
 
-        mapAsIDitionary.Remove(directKey);
+        mapAsIDitionary.Remove(forwardKey);
 
         Assert.AreEqual(1, map.Count);
 
-        Assert.AreEqual(1, map.Direct.Count);
-        Assert.IsFalse(map.Direct.ContainsKey((char)directKey));
+        Assert.AreEqual(1, map.Forward.Count);
+        Assert.IsFalse(map.Forward.ContainsKey((char)forwardKey));
 
         Assert.AreEqual(1, map.Reverse.Count);
         Assert.IsFalse(map.Reverse.ContainsKey((int)reverseKey));
     }
 
     [TestMethod]
-    public void IDictionaryRemove_FilledMapAndNullDirectKey_ThrowsArgumentNullException()
+    public void IDictionaryRemove_FilledMapAndNullForwardKey_ThrowsArgumentNullException()
     {
         var map = new BiMap<char?, int>()
         {
@@ -540,9 +540,9 @@ public class BiMapTests
         // checking that nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -552,7 +552,7 @@ public class BiMapTests
     [TestMethod]
     [DataRow('c')]
     [DataRow('d')]
-    public void IDictionaryRemove_FilledMapAndMissingKeys_ChangesNothing(object directKey)
+    public void IDictionaryRemove_FilledMapAndMissingKeys_ChangesNothing(object forwardKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -562,14 +562,14 @@ public class BiMapTests
 
         var mapAsIDitionary = (IDictionary)map;
 
-        mapAsIDitionary.Remove(directKey);
+        mapAsIDitionary.Remove(forwardKey);
 
         // checking that nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -580,7 +580,7 @@ public class BiMapTests
     [DataRow(0)]
     [DataRow(0f)]
     [DataRow("")]
-    public void IDictionaryRemove_FilledMapAndInvalidTypeKeys_ThrowsArgumentException(object directKey)
+    public void IDictionaryRemove_FilledMapAndInvalidTypeKeys_ThrowsArgumentException(object forwardKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -590,14 +590,14 @@ public class BiMapTests
 
         var mapAsIDitionary = (IDictionary)map;
 
-        Assert.ThrowsException<ArgumentException>(() => mapAsIDitionary.Remove(directKey));
+        Assert.ThrowsException<ArgumentException>(() => mapAsIDitionary.Remove(forwardKey));
 
         // checking that nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -618,7 +618,7 @@ public class BiMapTests
         map.Clear();
 
         Assert.AreEqual(0, map.Count);
-        Assert.AreEqual(0, map.Direct.Count);
+        Assert.AreEqual(0, map.Forward.Count);
         Assert.AreEqual(0, map.Reverse.Count);
     }
 
@@ -632,7 +632,7 @@ public class BiMapTests
     [DataRow('c', 2, false)]
     [DataRow('d', 3, false)]
     public void GenericICollectionContains_FilledMapAndKeysAndExpectedResult_ReturnsTrue(
-        char directKey, int reverseKey, bool expectedResult)
+        char forwardKey, int reverseKey, bool expectedResult)
     {
         var map = new BiMap<char, int>()
         {
@@ -641,7 +641,7 @@ public class BiMapTests
         };
 
         var mapAsGenericICollection = (ICollection<KeyValuePair<char, int>>)map;
-        var item                    = new KeyValuePair<char, int>(directKey, reverseKey);
+        var item                    = new KeyValuePair<char, int>(forwardKey, reverseKey);
 
         var isItemExists = mapAsGenericICollection.Contains(item);
 
@@ -652,7 +652,7 @@ public class BiMapTests
     [DataRow(null, null)]
     [DataRow(null, 0)]
     [DataRow('a', null)]
-    public void GenericICollectionContains_FilledMapAndNullKeys_ThrowsArgumentNullException(char? directKey, int? reverseKey)
+    public void GenericICollectionContains_FilledMapAndNullKeys_ThrowsArgumentNullException(char? forwardKey, int? reverseKey)
     {
         var map = new BiMap<char?, int?>()
         {
@@ -661,7 +661,7 @@ public class BiMapTests
         };
 
         var mapAsGenericICollection = (ICollection<KeyValuePair<char?, int?>>)map;
-        var item                    = new KeyValuePair<char?, int?>(directKey, reverseKey);
+        var item                    = new KeyValuePair<char?, int?>(forwardKey, reverseKey);
 
         Assert.ThrowsException<ArgumentNullException>(() => mapAsGenericICollection.Contains(item));
     }
@@ -675,7 +675,7 @@ public class BiMapTests
     [DataRow('b', true)]
     [DataRow('c', false)]
     [DataRow('d', false)]
-    public void IDictionaryContains_FilledMapAndDirectKeysAndExpectedResult_ReturnsTrue(object directKey, bool expectedResult)
+    public void IDictionaryContains_FilledMapAndForwardKeysAndExpectedResult_ReturnsTrue(object forwardKey, bool expectedResult)
     {
         var map = new BiMap<char, int>()
         {
@@ -685,13 +685,13 @@ public class BiMapTests
 
         var mapAsIDictionary = (IDictionary)map;
 
-        var isItemExists = mapAsIDictionary.Contains(directKey);
+        var isItemExists = mapAsIDictionary.Contains(forwardKey);
 
         Assert.AreEqual(expectedResult, isItemExists);
     }
 
     [TestMethod]
-    public void IDictionaryContains_FilledMapAndNullDirectKey_ThrowsArgumentNullException()
+    public void IDictionaryContains_FilledMapAndNullForwardKey_ThrowsArgumentNullException()
     {
         var map = new BiMap<char?, int>()
         {
@@ -708,7 +708,7 @@ public class BiMapTests
     [DataRow(0)]
     [DataRow(0f)]
     [DataRow("")]
-    public void IDictionaryContains_FilledMapAndInvalidTypeDirectKeys_ThrowsArgumentException(object directKey)
+    public void IDictionaryContains_FilledMapAndInvalidTypeForwardKeys_ThrowsArgumentException(object forwardKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -718,7 +718,7 @@ public class BiMapTests
 
         var mapAsIDictionary = (IDictionary)map;
 
-        Assert.ThrowsException<ArgumentException>(() => mapAsIDictionary.Contains(directKey));
+        Assert.ThrowsException<ArgumentException>(() => mapAsIDictionary.Contains(forwardKey));
     }
 
     #endregion
@@ -730,8 +730,8 @@ public class BiMapTests
     [DataRow('b', true)]
     [DataRow('c', false)]
     [DataRow('d', false)]
-    public void GenericIReadOnlyDictionaryContainsKey_FilledMapAndExistingDirectKeysAndExpectedResult_ReturnsTrue(
-        char directKey, bool expectedResult)
+    public void GenericIReadOnlyDictionaryContainsKey_FilledMapAndExistingForwardKeysAndExpectedResult_ReturnsTrue(
+        char forwardKey, bool expectedResult)
     {
         var map = new BiMap<char, int>()
         {
@@ -741,13 +741,13 @@ public class BiMapTests
 
         var mapAsGenericIReadOnlyDictionary = (IReadOnlyDictionary<char, int>)map;
 
-        var isItemExists = mapAsGenericIReadOnlyDictionary.ContainsKey(directKey);
+        var isItemExists = mapAsGenericIReadOnlyDictionary.ContainsKey(forwardKey);
 
         Assert.AreEqual(expectedResult, isItemExists);
     }
 
     [TestMethod]
-    public void GenericIReadOnlyDictionaryContainsKey_FilledMapAndNullDirectKey_ThrowsArgumentNullException()
+    public void GenericIReadOnlyDictionaryContainsKey_FilledMapAndNullForwardKey_ThrowsArgumentNullException()
     {
         var map = new BiMap<char?, int>()
         {
@@ -769,8 +769,8 @@ public class BiMapTests
     [DataRow('b', true)]
     [DataRow('c', false)]
     [DataRow('d', false)]
-    public void GenericIDictionaryContainsKey_FilledMapAndExistingDirectKeysAndExpectedResult_ReturnsTrue(
-        char directKey, bool expectedResult)
+    public void GenericIDictionaryContainsKey_FilledMapAndExistingForwardKeysAndExpectedResult_ReturnsTrue(
+        char forwardKey, bool expectedResult)
     {
         var map = new BiMap<char, int>()
         {
@@ -780,13 +780,13 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary<char, int>)map;
 
-        var isItemExists = mapAsGenericIDictionary.ContainsKey(directKey);
+        var isItemExists = mapAsGenericIDictionary.ContainsKey(forwardKey);
 
         Assert.AreEqual(expectedResult, isItemExists);
     }
 
     [TestMethod]
-    public void GenericIDictionaryContainsKey_FilledMapAndNullDirectKey_ThrowsArgumentNullException()
+    public void GenericIDictionaryContainsKey_FilledMapAndNullForwardKey_ThrowsArgumentNullException()
     {
         var map = new BiMap<char?, int>()
         {
@@ -806,8 +806,8 @@ public class BiMapTests
     [TestMethod]
     [DataRow('a', 0)]
     [DataRow('b', 1)]
-    public void GenericIReadOnlyDictionaryTryGetValue_FilledMapAndExistingDirectKeys_ReturnsTrueAndReturnsOutExpectedReverseKey(
-        char directKey, int expectedReverseKey)
+    public void GenericIReadOnlyDictionaryTryGetValue_FilledMapAndExistingForwardKeys_ReturnsTrueAndReturnsOutExpectedReverseKey(
+        char forwardKey, int expectedReverseKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -817,7 +817,7 @@ public class BiMapTests
 
         var mapAsGenericIReadOnlyDictionary = (IReadOnlyDictionary<char, int>)map;
 
-        var isKeyExists = mapAsGenericIReadOnlyDictionary.TryGetValue(directKey, out var reverseKey);
+        var isKeyExists = mapAsGenericIReadOnlyDictionary.TryGetValue(forwardKey, out var reverseKey);
 
         Assert.IsTrue(isKeyExists);
         Assert.AreEqual(expectedReverseKey, reverseKey);
@@ -826,7 +826,7 @@ public class BiMapTests
     [TestMethod]
     [DataRow('c')]
     [DataRow('d')]
-    public void GenericIReadOnlyDictionaryTryGetValue_FilledMapAndMissingDirectKeys_ReturnsFalse(char directKey)
+    public void GenericIReadOnlyDictionaryTryGetValue_FilledMapAndMissingForwardKeys_ReturnsFalse(char forwardKey)
     {
         var map = new BiMap<char?, int>()
         {
@@ -836,7 +836,7 @@ public class BiMapTests
 
         var mapAsGenericIReadOnlyDictionary = (IReadOnlyDictionary<char?, int>)map;
 
-        var isKeyExists = mapAsGenericIReadOnlyDictionary.TryGetValue(directKey, out var _);
+        var isKeyExists = mapAsGenericIReadOnlyDictionary.TryGetValue(forwardKey, out var _);
 
         Assert.IsFalse(isKeyExists);
     }
@@ -848,8 +848,8 @@ public class BiMapTests
     [TestMethod]
     [DataRow('a', 0)]
     [DataRow('b', 1)]
-    public void GenericIDictionaryTryGetValue_FilledMapAndExistingDirectKeys_ReturnsTrueAndReturnsOutExpectedReverseKey(
-        char directKey, int expectedReverseKey)
+    public void GenericIDictionaryTryGetValue_FilledMapAndExistingForwardKeys_ReturnsTrueAndReturnsOutExpectedReverseKey(
+        char forwardKey, int expectedReverseKey)
     {
         var map = new BiMap<char, int>()
         {
@@ -859,7 +859,7 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary<char, int>)map;
 
-        var isKeyExists = mapAsGenericIDictionary.TryGetValue(directKey, out var reverseKey);
+        var isKeyExists = mapAsGenericIDictionary.TryGetValue(forwardKey, out var reverseKey);
 
         Assert.IsTrue(isKeyExists);
         Assert.AreEqual(expectedReverseKey, reverseKey);
@@ -868,7 +868,7 @@ public class BiMapTests
     [TestMethod]
     [DataRow('c')]
     [DataRow('d')]
-    public void GenericIDictionaryTryGetValue_FilledMapAndMissingDirectKeys_ReturnsFalse(char directKey)
+    public void GenericIDictionaryTryGetValue_FilledMapAndMissingForwardKeys_ReturnsFalse(char forwardKey)
     {
         var map = new BiMap<char?, int>()
         {
@@ -878,7 +878,7 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary<char?, int>)map;
 
-        var isKeyExists = mapAsGenericIDictionary.TryGetValue(directKey, out var _);
+        var isKeyExists = mapAsGenericIDictionary.TryGetValue(forwardKey, out var _);
 
         Assert.IsFalse(isKeyExists);
     }
@@ -894,8 +894,8 @@ public class BiMapTests
     [TestMethod]
     [DataRow('a', 0)]
     [DataRow('b', 1)]
-    public void IDictionaryIndexerGet_FilledMapAndExistingDirectKeys_ReturnsExpectedReverseKey(
-        object directKey, object expectedReverseKey)
+    public void IDictionaryIndexerGet_FilledMapAndExistingForwardKeys_ReturnsExpectedReverseKey(
+        object forwardKey, object expectedReverseKey)
     {
         var map = new BiMap<char, int>
         {
@@ -905,13 +905,13 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary)map;
 
-        var reverseKey = mapAsGenericIDictionary[directKey];
+        var reverseKey = mapAsGenericIDictionary[forwardKey];
 
         Assert.AreEqual(expectedReverseKey, reverseKey);
     }
 
     [TestMethod]
-    public void IDictionaryIndexerGet_FilledMapAndNullDirectKey_ThrowsArgumentNullException()
+    public void IDictionaryIndexerGet_FilledMapAndNullForwardKey_ThrowsArgumentNullException()
     {
         var map = new BiMap<char?, int>
         {
@@ -927,7 +927,7 @@ public class BiMapTests
     [TestMethod]
     [DataRow('c')]
     [DataRow('d')]
-    public void IDictionaryIndexerGet_FilledMapAndMissingDirectKeys_ThrowsKeyNotFoundException(object directKey)
+    public void IDictionaryIndexerGet_FilledMapAndMissingForwardKeys_ThrowsKeyNotFoundException(object forwardKey)
     {
         var map = new BiMap<char, int>
         {
@@ -937,14 +937,14 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary)map;
 
-        Assert.ThrowsException<KeyNotFoundException>(() => mapAsGenericIDictionary[directKey]);
+        Assert.ThrowsException<KeyNotFoundException>(() => mapAsGenericIDictionary[forwardKey]);
     }
 
     [TestMethod]
     [DataRow(0)]
     [DataRow(0f)]
     [DataRow("")]
-    public void IDictionaryIndexerGet_FilledMapAndInvalidTypeDirectKeys_ThrowsArgumentException(object directKey)
+    public void IDictionaryIndexerGet_FilledMapAndInvalidTypeForwardKeys_ThrowsArgumentException(object forwardKey)
     {
         var map = new BiMap<char, int>
         {
@@ -954,7 +954,7 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary)map;
 
-        Assert.ThrowsException<ArgumentException>(() => mapAsGenericIDictionary[directKey]);
+        Assert.ThrowsException<ArgumentException>(() => mapAsGenericIDictionary[forwardKey]);
     }
 
     #endregion
@@ -964,8 +964,8 @@ public class BiMapTests
     [TestMethod]
     [DataRow('a', 0)]
     [DataRow('b', 1)]
-    public void GenericIReadOnlyDictionaryIndexerGet_FilledMapAndExistingDirectKeys_ReturnsExpectedReverseKey(
-        char directKey, int expectedReverseKey)
+    public void GenericIReadOnlyDictionaryIndexerGet_FilledMapAndExistingForwardKeys_ReturnsExpectedReverseKey(
+        char forwardKey, int expectedReverseKey)
     {
         var map = new BiMap<char, int>
         {
@@ -975,13 +975,13 @@ public class BiMapTests
 
         var mapAsGenericIReadOnlyDictionary = (IReadOnlyDictionary<char, int>)map;
 
-        var reverseKey = mapAsGenericIReadOnlyDictionary[directKey];
+        var reverseKey = mapAsGenericIReadOnlyDictionary[forwardKey];
 
         Assert.AreEqual(expectedReverseKey, reverseKey);
     }
 
     [TestMethod]
-    public void GenericIReadOnlyDictionaryIndexerGet_FilledMapAndNullDirectKey_ThrowsArgumentNullException()
+    public void GenericIReadOnlyDictionaryIndexerGet_FilledMapAndNullForwardKey_ThrowsArgumentNullException()
     {
         var map = new BiMap<char?, int>
         {
@@ -997,7 +997,7 @@ public class BiMapTests
     [TestMethod]
     [DataRow('c')]
     [DataRow('d')]
-    public void GenericIReadOnlyDictionaryIndexerGet_FilledMapAndMissingDirectKeys_ThrowsKeyNotFoundException(char directKey)
+    public void GenericIReadOnlyDictionaryIndexerGet_FilledMapAndMissingForwardKeys_ThrowsKeyNotFoundException(char forwardKey)
     {
         var map = new BiMap<char, int>
         {
@@ -1007,7 +1007,7 @@ public class BiMapTests
 
         var mapAsGenericIReadOnlyDictionary = (IReadOnlyDictionary<char, int>)map;
 
-        Assert.ThrowsException<KeyNotFoundException>(() => mapAsGenericIReadOnlyDictionary[directKey]);
+        Assert.ThrowsException<KeyNotFoundException>(() => mapAsGenericIReadOnlyDictionary[forwardKey]);
     }
 
     #endregion
@@ -1017,8 +1017,8 @@ public class BiMapTests
     [TestMethod]
     [DataRow('a', 0)]
     [DataRow('b', 1)]
-    public void GenericIDictionaryIndexerGet_FilledMapAndExistingDirectKeys_ReturnsExpectedReverseKey(
-        char directKey, int expectedReverseKey)
+    public void GenericIDictionaryIndexerGet_FilledMapAndExistingForwardKeys_ReturnsExpectedReverseKey(
+        char forwardKey, int expectedReverseKey)
     {
         var map = new BiMap<char, int>
         {
@@ -1028,13 +1028,13 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary<char, int>)map;
 
-        var reverseKey = mapAsGenericIDictionary[directKey];
+        var reverseKey = mapAsGenericIDictionary[forwardKey];
 
         Assert.AreEqual(expectedReverseKey, reverseKey);
     }
 
     [TestMethod]
-    public void GenericIDictionaryIndexerGet_FilledMapAndNullDirectKey_ThrowsArgumentNullException()
+    public void GenericIDictionaryIndexerGet_FilledMapAndNullForwardKey_ThrowsArgumentNullException()
     {
         var map = new BiMap<char?, int>
         {
@@ -1050,7 +1050,7 @@ public class BiMapTests
     [TestMethod]
     [DataRow('c')]
     [DataRow('d')]
-    public void GenericIDictionaryIndexerGet_FilledMapAndMissingDirectKeys_ThrowsKeyNotFoundException(char directKey)
+    public void GenericIDictionaryIndexerGet_FilledMapAndMissingForwardKeys_ThrowsKeyNotFoundException(char forwardKey)
     {
         var map = new BiMap<char, int>
         {
@@ -1060,7 +1060,7 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary<char, int>)map;
 
-        Assert.ThrowsException<KeyNotFoundException>(() => mapAsGenericIDictionary[directKey]);
+        Assert.ThrowsException<KeyNotFoundException>(() => mapAsGenericIDictionary[forwardKey]);
     }
 
     #endregion
@@ -1072,8 +1072,8 @@ public class BiMapTests
     [DataRow('b', 2)]
     [DataRow('a', 0)]
     [DataRow('b', 1)]
-    public void IDictionaryIndexerSet_FilledMapAndExistingDirectKeysAndNonDuplicateReverseKeys_SetsReverseKeySuccessfully(
-        object directKey, object reverseKey)
+    public void IDictionaryIndexerSet_FilledMapAndExistingForwardKeysAndNonDuplicateReverseKeys_SetsReverseKeySuccessfully(
+        object forwardKey, object reverseKey)
     {
         var map = new BiMap<char, int>
         {
@@ -1083,15 +1083,15 @@ public class BiMapTests
 
         var mapAsIDictionary = (IDictionary)map;
 
-        mapAsIDictionary[directKey] = reverseKey;
+        mapAsIDictionary[forwardKey] = reverseKey;
 
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(reverseKey, map.Direct[(char)directKey]);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(reverseKey, map.Forward[(char)forwardKey]);
 
         Assert.AreEqual(2, map.Reverse.Count);
-        Assert.AreEqual(directKey, map.Reverse[(int)reverseKey]);
+        Assert.AreEqual(forwardKey, map.Reverse[(int)reverseKey]);
     }
 
     [TestMethod]
@@ -1100,7 +1100,7 @@ public class BiMapTests
     [DataRow(null, 2)]
     [DataRow('a', null)]
     [DataRow('c', null)]
-    public void IDictionaryIndexerSet_FilledMapAndNullKeys_ThrowsArgumentNullException(object? directKey, object? reverseKey)
+    public void IDictionaryIndexerSet_FilledMapAndNullKeys_ThrowsArgumentNullException(object? forwardKey, object? reverseKey)
     {
         var map = new BiMap<char?, int?>
         {
@@ -1110,14 +1110,14 @@ public class BiMapTests
 
         var mapAsIDictionary = (IDictionary)map;
 
-        Assert.ThrowsException<ArgumentNullException>(() => mapAsIDictionary[directKey!] = reverseKey);
+        Assert.ThrowsException<ArgumentNullException>(() => mapAsIDictionary[forwardKey!] = reverseKey);
 
         // checking nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -1127,7 +1127,7 @@ public class BiMapTests
     [TestMethod]
     [DataRow('a', 1)]
     [DataRow('b', 0)]
-    public void IDictionaryIndexerSet_FilledMapAndDuplicateReverseKeys_ThrowsArgumentException(object directKey, object reverseKey)
+    public void IDictionaryIndexerSet_FilledMapAndDuplicateReverseKeys_ThrowsArgumentException(object forwardKey, object reverseKey)
     {
         var map = new BiMap<char, int>
         {
@@ -1137,14 +1137,14 @@ public class BiMapTests
 
         var mapAsIDictionary = (IDictionary)map;
 
-        Assert.ThrowsException<ArgumentException>(() => mapAsIDictionary[directKey] = reverseKey);
+        Assert.ThrowsException<ArgumentException>(() => mapAsIDictionary[forwardKey] = reverseKey);
     }
 
     [TestMethod]
     [DataRow('c', 2)]
     [DataRow('d', 3)]
-    public void IDictionaryIndexerSet_FilledMapAndNewDirectKeysAndNonDuplicateReverseKeys_AddsKeysSuccessfully(
-        object directKey, object reverseKey)
+    public void IDictionaryIndexerSet_FilledMapAndNewForwardKeysAndNonDuplicateReverseKeys_AddsKeysSuccessfully(
+        object forwardKey, object reverseKey)
     {
         var map = new BiMap<char, int>
         {
@@ -1154,26 +1154,26 @@ public class BiMapTests
 
         var mapAsIDictionary = (IDictionary)map;
 
-        mapAsIDictionary[directKey] = reverseKey;
+        mapAsIDictionary[forwardKey] = reverseKey;
 
         Assert.AreEqual(3, map.Count);
 
-        Assert.AreEqual(3, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
-        Assert.AreEqual(reverseKey, map.Direct[(char)directKey]);
+        Assert.AreEqual(3, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
+        Assert.AreEqual(reverseKey, map.Forward[(char)forwardKey]);
 
         Assert.AreEqual(3, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
         Assert.AreEqual('b', map.Reverse[1]);
-        Assert.AreEqual(directKey, map.Reverse[(int)reverseKey]);
+        Assert.AreEqual(forwardKey, map.Reverse[(int)reverseKey]);
     }
 
     [TestMethod]
     [DataRow('c', 0)]
     [DataRow('d', 1)]
-    public void IDictionaryIndexerSet_FilledMapAndNewDirectKeysAndDuplicateReverseKeys_ThrowsArgumentException(
-        object directKey, object reverseKey)
+    public void IDictionaryIndexerSet_FilledMapAndNewForwardKeysAndDuplicateReverseKeys_ThrowsArgumentException(
+        object forwardKey, object reverseKey)
     {
         var map = new BiMap<char, int>
         {
@@ -1183,14 +1183,14 @@ public class BiMapTests
 
         var mapAsIDictionary = (IDictionary)map;
 
-        Assert.ThrowsException<ArgumentException>(() => mapAsIDictionary[directKey] = reverseKey);
+        Assert.ThrowsException<ArgumentException>(() => mapAsIDictionary[forwardKey] = reverseKey);
 
         // checking nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -1206,7 +1206,7 @@ public class BiMapTests
     [DataRow(0f, 0)]
     [DataRow("", 0)]
     public void IDictionaryIndexerSet_FilledMapAndInvalidTypeKeys_ThrowsArgumentException(
-        object directKey, object reverseKey)
+        object forwardKey, object reverseKey)
     {
         var map = new BiMap<char, int>
         {
@@ -1216,14 +1216,14 @@ public class BiMapTests
 
         var mapAsIDictionary = (IDictionary)map;
 
-        Assert.ThrowsException<ArgumentException>(() => mapAsIDictionary[directKey] = reverseKey);
+        Assert.ThrowsException<ArgumentException>(() => mapAsIDictionary[forwardKey] = reverseKey);
 
         // checking nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -1239,8 +1239,8 @@ public class BiMapTests
     [DataRow('b', 2)]
     [DataRow('a', 0)]
     [DataRow('b', 1)]
-    public void GenericIDictionaryIndexerSet_FilledMapAndExistingDirectKeysAndNonDuplicateReverseKeys_SetsReverseKeySuccessfully(
-        char directKey, int reverseKey)
+    public void GenericIDictionaryIndexerSet_FilledMapAndExistingForwardKeysAndNonDuplicateReverseKeys_SetsReverseKeySuccessfully(
+        char forwardKey, int reverseKey)
     {
         var map = new BiMap<char, int>
         {
@@ -1250,15 +1250,15 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary<char, int>)map;
 
-        mapAsGenericIDictionary[directKey] = reverseKey;
+        mapAsGenericIDictionary[forwardKey] = reverseKey;
 
         Assert.AreEqual(2, map.Count);
         
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(reverseKey, map.Direct[directKey]);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(reverseKey, map.Forward[forwardKey]);
 
         Assert.AreEqual(2, map.Reverse.Count);
-        Assert.AreEqual(directKey, map.Reverse[reverseKey]);
+        Assert.AreEqual(forwardKey, map.Reverse[reverseKey]);
     }
 
     [TestMethod]
@@ -1267,7 +1267,7 @@ public class BiMapTests
     [DataRow(null, 2)]
     [DataRow('a', null)]
     [DataRow('c', null)]
-    public void GenericIDictionaryIndexerSet_FilledMapAndNullKeys_ThrowsArgumentNullException(char? directKey, int? reverseKey)
+    public void GenericIDictionaryIndexerSet_FilledMapAndNullKeys_ThrowsArgumentNullException(char? forwardKey, int? reverseKey)
     {
         var map = new BiMap<char?, int?>
         {
@@ -1277,14 +1277,14 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary<char?, int?>)map;
 
-        Assert.ThrowsException<ArgumentNullException>(() => mapAsGenericIDictionary[directKey] = reverseKey);
+        Assert.ThrowsException<ArgumentNullException>(() => mapAsGenericIDictionary[forwardKey] = reverseKey);
 
         // checking nothing has changed
         Assert.AreEqual(2, map.Count);
         
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
@@ -1294,7 +1294,7 @@ public class BiMapTests
     [TestMethod]
     [DataRow('a', 1)]
     [DataRow('b', 0)]
-    public void GenericIDictionaryIndexerSet_FilledMapAndDuplicateReverseKeys_ThrowsArgumentException(char directKey, int reverseKey)
+    public void GenericIDictionaryIndexerSet_FilledMapAndDuplicateReverseKeys_ThrowsArgumentException(char forwardKey, int reverseKey)
     {
         var map = new BiMap<char, int>
         {
@@ -1304,14 +1304,14 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary<char, int>)map;
 
-        Assert.ThrowsException<ArgumentException>(() => mapAsGenericIDictionary[directKey] = reverseKey);
+        Assert.ThrowsException<ArgumentException>(() => mapAsGenericIDictionary[forwardKey] = reverseKey);
     }
 
     [TestMethod]
     [DataRow('c', 2)]
     [DataRow('d', 3)]
-    public void GenericIDictionaryIndexerSet_FilledMapAndNewDirectKeysAndNonDuplicateReverseKeys_AddsKeysSuccessfully(
-        char directKey, int reverseKey)
+    public void GenericIDictionaryIndexerSet_FilledMapAndNewForwardKeysAndNonDuplicateReverseKeys_AddsKeysSuccessfully(
+        char forwardKey, int reverseKey)
     {
         var map = new BiMap<char, int>
         {
@@ -1321,26 +1321,26 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary<char, int>)map;
 
-        mapAsGenericIDictionary[directKey] = reverseKey;
+        mapAsGenericIDictionary[forwardKey] = reverseKey;
 
         Assert.AreEqual(3, map.Count);
 
-        Assert.AreEqual(3, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
-        Assert.AreEqual(reverseKey, map.Direct[directKey]);
+        Assert.AreEqual(3, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
+        Assert.AreEqual(reverseKey, map.Forward[forwardKey]);
 
         Assert.AreEqual(3, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);
         Assert.AreEqual('b', map.Reverse[1]);
-        Assert.AreEqual(directKey, map.Reverse[reverseKey]);
+        Assert.AreEqual(forwardKey, map.Reverse[reverseKey]);
     }
 
     [TestMethod]
     [DataRow('c', 0)]
     [DataRow('d', 1)]
-    public void GenericIDictionaryIndexerSet_FilledMapAndNewDirectKeysAndDuplicateReverseKeys_ThrowsArgumentException(
-        char directKey, int reverseKey)
+    public void GenericIDictionaryIndexerSet_FilledMapAndNewForwardKeysAndDuplicateReverseKeys_ThrowsArgumentException(
+        char forwardKey, int reverseKey)
     {
         var map = new BiMap<char, int>
         {
@@ -1350,14 +1350,14 @@ public class BiMapTests
 
         var mapAsGenericIDictionary = (IDictionary<char, int>)map;
 
-        Assert.ThrowsException<ArgumentException>(() => mapAsGenericIDictionary[directKey] = reverseKey);
+        Assert.ThrowsException<ArgumentException>(() => mapAsGenericIDictionary[forwardKey] = reverseKey);
 
         // checking nothing has changed
         Assert.AreEqual(2, map.Count);
 
-        Assert.AreEqual(2, map.Direct.Count);
-        Assert.AreEqual(0, map.Direct['a']);
-        Assert.AreEqual(1, map.Direct['b']);
+        Assert.AreEqual(2, map.Forward.Count);
+        Assert.AreEqual(0, map.Forward['a']);
+        Assert.AreEqual(1, map.Forward['b']);
 
         Assert.AreEqual(2, map.Reverse.Count);
         Assert.AreEqual('a', map.Reverse[0]);

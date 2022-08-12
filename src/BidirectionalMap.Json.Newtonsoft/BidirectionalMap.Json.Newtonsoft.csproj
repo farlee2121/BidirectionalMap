@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Spencer Farley, Ihor Kuzmychov</Authors>
-    <Description>Provides JSON Newtonsoft-converter for BidirectionalMap v1.0.0.</Description>
-    <PackageProjectUrl>https://github.com/farlee2121/BidirectionalMap</PackageProjectUrl>
-    <PackageTags>dotnet-standard;lookup;map;bidirectional;dictionary;bimap;json;newtonsoft</PackageTags>
+    <Description>Provides JSON Newtonsoft-converter for BidirectionalMap v1.0.0. Using this converter with new BidirectionalMap package versions is surplus.</Description>
+    <PackageProjectUrl>https://github.com/farlee2121/BiforwardionalMap</PackageProjectUrl>
+    <PackageTags>dotnet-standard;lookup;map;biforwardional;dictionary;bimap;json;newtonsoft</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

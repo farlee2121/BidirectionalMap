@@ -1,30 +1,29 @@
 ﻿using BidirectionalMap;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Newtonsoft.Json.Converters
 {
     /// <summary>
-    /// Converts <see cref="BiMap{TDirectKey, TReverseKey}"/> object to or from JSON.
-    /// <para>This converter may be used for BidirectionalMap v1.0.0 package only. In upper package versions <see cref="BiMap{TForwardKey, TReverseKey}"/> implements <see cref="IDictionary{TKey, TValue}"/>.</para>
+    /// Converts <see cref="BiMap{TForwardKey, TReverseKey}"/> object to or from JSON as dictionary.
+    /// <para>This converter needs to be used for BidirectionalMap v1.0.0 package only. Using this converter with new BidirectionalMap package versions is surplus.</para>
     /// </summary>
-    /// <typeparam name="TDirectKey">The type of the direct keys.</typeparam>
+    /// <typeparam name="TForwardKey">The type of the forward keys.</typeparam>
     /// <typeparam name="TReverseKey">The type of the reverse keys.</typeparam>
-    public class JsonBiMapConverter<TDirectKey, TReverseKey> : JsonConverter<BiMap<TDirectKey, TReverseKey>>
+    public class JsonBiMapConverter<TForwardKey, TReverseKey> : JsonConverter<BiMap<TForwardKey, TReverseKey>>
     {
-        public override BiMap<TDirectKey, TReverseKey> ReadJson(JsonReader reader, Type objectType, BiMap<TDirectKey, TReverseKey> existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override BiMap<TForwardKey, TReverseKey> ReadJson(JsonReader reader, Type objectType, BiMap<TForwardKey, TReverseKey> existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            var dictionary = serializer.Deserialize<Dictionary<TDirectKey, TReverseKey>>(reader);
+            var dictionary = serializer.Deserialize<Dictionary<TForwardKey, TReverseKey>>(reader);
 
             if (dictionary is null)
                 return null;
             else
-                return new BiMap<TDirectKey, TReverseKey>(dictionary);
+                return new BiMap<TForwardKey, TReverseKey>(dictionary);
         }
 
-        public override void WriteJson(JsonWriter writer, BiMap<TDirectKey, TReverseKey> value, JsonSerializer serializer)
-        {
-            serializer.Serialize(writer, value?.Forward?.ToDictionary());
-        }
+        public override void WriteJson(JsonWriter writer, BiMap<TForwardKey, TReverseKey> value, JsonSerializer serializer) =>
+            serializer.Serialize(writer, value?.Forward?.ToDictionary(pair => pair.Key, pair => pair.Value));
     }
 }
