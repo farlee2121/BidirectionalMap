@@ -22,6 +22,19 @@ namespace BidirectionalMap
             Reverse = new Indexer<TReverseKey, TForwardKey>(reversedOneWayMap);
         }
 
+        public BiMap(IEqualityComparer<TForwardKey> forwardComparer, IEqualityComparer<TReverseKey> reverseComparer)
+        {
+            Forward = new Indexer<TForwardKey, TReverseKey>(forwardComparer ?? EqualityComparer<TForwardKey>.Default);
+            Reverse = new Indexer<TReverseKey, TForwardKey>(reverseComparer ?? EqualityComparer<TReverseKey>.Default);
+        }
+
+        public BiMap(IDictionary<TForwardKey, TReverseKey> oneWayMap, IEqualityComparer<TForwardKey> forwardComparer, IEqualityComparer<TReverseKey> reverseComparer)
+        {
+            Forward = new Indexer<TForwardKey, TReverseKey>(oneWayMap, forwardComparer ?? EqualityComparer<TForwardKey>.Default);
+            var reversedOneWayMap = oneWayMap.ToDictionary(kvp => kvp.Value, kvp => kvp.Key, reverseComparer ?? EqualityComparer<TReverseKey>.Default);
+            Reverse = new Indexer<TReverseKey, TForwardKey>(reversedOneWayMap, reverseComparer ?? EqualityComparer<TReverseKey>.Default);
+        }
+
         public void Add(TForwardKey t1, TReverseKey t2)
         {
             if (Forward.ContainsKey(t1))
@@ -86,10 +99,21 @@ namespace BidirectionalMap
             {
                 _dictionary = new Dictionary<Key, Value>();
             }
+
             public Indexer(IDictionary<Key, Value> dictionary)
             {
                 _dictionary = dictionary;
             }
+            public Indexer(IEqualityComparer<Key> comparer)
+            {
+                _dictionary = new Dictionary<Key, Value>(comparer);
+            }
+
+            public Indexer(IDictionary<Key, Value> dictionary, IEqualityComparer<Key> comparer)
+            {
+                _dictionary = new Dictionary<Key, Value>(dictionary, comparer ?? EqualityComparer<Key>.Default);
+            }
+
             public Value this[Key index]
             {
                 get { return _dictionary[index]; }
