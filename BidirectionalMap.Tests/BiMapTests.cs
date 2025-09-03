@@ -67,7 +67,7 @@ namespace BidirectionalMap.Tests
             Assert.Equal(2, map.Forward[1]);
             Assert.Equal(1, map.Reverse[2]);
 
-            Assert.Equal(true, map.Remove(1));
+            Assert.True(map.Remove(1));
 
             //Make sure I can't fetch after removing
             Assert.False(map.Forward.ContainsKey(1));

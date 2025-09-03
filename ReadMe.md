@@ -23,14 +23,6 @@ var mappedString = map.Forward[1]; //"Circle"
 var mappedInt = map.Reverse["Circle"]; // 1
 ```
 
-It isn't limited to value types
-```cs
-BiMap<int, Action> map = new BiMap<int, Action>(){
-	{1, () => /* do something*/},
-};
-
-var action = map.Forward[1]; 
-```
 
 Why?
 ---
@@ -39,7 +31,7 @@ Well, table-driven value mapping is a very powerfull technique that makes conver
 Some common scenarios for this kind of technique include
  - Mapping to some kind of storage (say, converting between enum and string)
  - Mapping display values to and from requests
- - Wrapping other code (adapter-style) to consume the api on your own terms
+ - Wrapping other code (adapter-style) to consume their api on your own terms
  - Choosing an action or configuration based on some kind of type value (this is usually just one-way though)
 
 Install
