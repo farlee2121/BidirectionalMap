@@ -11,7 +11,7 @@
     <Description>
       A two-way one-to-one lookup for .NET Standard. Like a dictionary, but indexed both ways.
     </Description>
-    <Version></Version>
+    <Version>1.1.0</Version>
     <Authors>Spencer Farley</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/farlee2121/BidirectionalMap</RepositoryUrl>
