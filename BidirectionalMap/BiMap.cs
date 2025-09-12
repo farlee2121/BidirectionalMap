@@ -46,6 +46,18 @@ namespace BidirectionalMap
             Reverse.Add(t2, t1);
         }
 
+        public bool TryAdd(TForwardKey t1, TReverseKey t2)
+        {
+            if (!Forward.TryAdd(t1, t2))
+                return false;
+            if (!Reverse.TryAdd(t2, t1))
+            {
+                Forward.Remove(t1); // Rollback
+                return false;
+            }
+            return true;
+        }
+
         public bool Remove(TForwardKey forwardKey)
         {
             if (Forward.ContainsKey(forwardKey) == false) return false;
@@ -87,7 +99,7 @@ namespace BidirectionalMap
         }
 
         /// <summary>
-        /// Publically read-only lookup to prevent inconsistent state between forward and reverse map lookups
+        /// Publicly read-only lookup to prevent inconsistent state between forward and reverse map lookups
         /// </summary>
         /// <typeparam name="Key"></typeparam>
         /// <typeparam name="Value"></typeparam>
@@ -129,6 +141,13 @@ namespace BidirectionalMap
                 _dictionary.Add(key, value);
             }
 
+            internal bool TryAdd(Key key, Value value)
+            {
+                if (_dictionary.ContainsKey(key)) return false;
+                _dictionary.Add(key, value);
+                return true;
+            }
+
             internal bool Remove(Key key)
             {
                 return _dictionary.Remove(key);
@@ -144,9 +163,15 @@ namespace BidirectionalMap
                 return _dictionary.ContainsKey(key);
             }
 
+            public bool TryGetValue(Key key, out Value value)
+            {
+                return _dictionary.TryGetValue(key, out value);
+            }
+
             public IEnumerable<Key> Keys
             {
-                get { 
+                get
+                {
                     return _dictionary.Keys;
                 }
             }

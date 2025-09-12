@@ -36,6 +36,17 @@ namespace BidirectionalMap.Tests
         }
 
         [Fact]
+        public void TryAddKeyValueMap()
+        {
+            BiMap<int, int> map = new BiMap<int, int>();
+            bool result = map.TryAdd(1, 2);
+            Assert.True(result);
+            Assert.Equal(2, map.Forward[1]);
+            Assert.Equal(1, map.Reverse[2]);
+            Assert.Single(map);
+        }
+
+        [Fact]
         public void ReAddExistingKey()
         {
             BiMap<int, int> map = new BiMap<int, int>();
@@ -56,6 +67,30 @@ namespace BidirectionalMap.Tests
             {
                 map.Add(2, 2);
             });
+        }
+
+        [Fact]
+        public void TryReAddExistingKey()
+        {
+            BiMap<int, int> map = new BiMap<int, int>();
+            map.Add(1, 2);
+            bool result = map.TryAdd(1, 2);
+            Assert.False(result);
+
+            Assert.Single(map.Forward);
+            Assert.Single(map.Reverse); // rollback worked.
+        }
+
+        [Fact]
+        public void TryReAddExistingReverseKey()
+        {
+            BiMap<int, int> map = new BiMap<int, int>();
+            map.Add(1, 2);
+            bool result = map.TryAdd(3, 2);
+            Assert.False(result);
+
+            Assert.Single(map.Forward);
+            Assert.Single(map.Reverse); // rollback worked.
         }
 
         [Fact]
@@ -125,6 +160,25 @@ namespace BidirectionalMap.Tests
             Assert.False(map.Reverse.ContainsKey(2));
         }
 
+        [Fact]
+        public void TryGet_ExistingValue()
+        {
+            BiMap<int, int> map = new BiMap<int, int>();
+            map.Add(1, 2);
+            Assert.True(map.Forward.TryGetValue(1, out int val));
+            Assert.Equal(2, val);
+        }
+
+        [Fact]
+        public void TryGet_NonExistingValue()
+        {
+            BiMap<int, int> map = new BiMap<int, int>();
+            Assert.False(map.Forward.TryGetValue(1, out int val1));
+            Assert.Equal(0, val1); // default(int) == 0
+
+            Assert.False(map.Reverse.TryGetValue(1, out int val2));
+            Assert.Equal(0, val2); // default(int) == 0
+        }
 
         [Fact]
         public void IndexerToDictionaryDoesNotMutateOriginal()
