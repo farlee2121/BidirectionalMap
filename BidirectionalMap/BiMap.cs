@@ -103,9 +103,9 @@ namespace BidirectionalMap
         /// </summary>
         /// <typeparam name="Key"></typeparam>
         /// <typeparam name="Value"></typeparam>
-        public class Indexer<Key, Value> : IEnumerable<KeyValuePair<Key, Value>>
+        public class Indexer<Key, Value> : IReadOnlyDictionary<Key, Value>
         {
-            private IDictionary<Key, Value> _dictionary;
+            private readonly IDictionary<Key, Value> _dictionary;
 
             public Indexer()
             {
@@ -131,6 +131,11 @@ namespace BidirectionalMap
                 get { return _dictionary[index]; }
             }
 
+            public int Count
+            {
+                get { return _dictionary.Count; }
+            }
+
             public static implicit operator Dictionary<Key, Value>(Indexer<Key, Value> indexer)
             {
                 return new Dictionary<Key, Value>(indexer._dictionary);
@@ -151,11 +156,6 @@ namespace BidirectionalMap
             internal bool Remove(Key key)
             {
                 return _dictionary.Remove(key);
-            }
-
-            internal int Count()
-            {
-                return _dictionary.Count;
             }
 
             public bool ContainsKey(Key key)

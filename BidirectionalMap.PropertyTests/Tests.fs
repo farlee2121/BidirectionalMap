@@ -42,4 +42,10 @@ let ``Top-level as set equals forward set`` (mapVals) =
     let map = new BiMap<int, Guid>(mapVals)
     map |= map.Forward
 
+[<Property>]
+let ``Indexer Count matches number of unique pairs`` (mapVals) =
+    let map = new BiMap<int, Guid>(mapVals)
+    map.Forward.Count = Seq.length mapVals
+    && map.Reverse.Count = Seq.length mapVals
+
 // ?? after remove, neither set contains the key??

@@ -287,8 +287,34 @@ namespace BidirectionalMap.Tests
         }
 
 
+        [Fact]
+        public void GetValueOrDefault_Extension_Method_Works()
+        {
+            // This test is not strictly necessary, as we are already testing the TryGet method. But it documents the expected behavior of the extension method.
+
+            var map = new BiMap<int, string>
+            {
+                {1, "one"},
+                {2, "two"}
+            };
+
+            // Test values that exist
+            Assert.Equal("one", map.Forward.GetValueOrDefault(1));
+            Assert.Equal("two", map.Forward.GetValueOrDefault(2));
+            Assert.Equal(1, map.Reverse.GetValueOrDefault("one"));
+            Assert.Equal(2, map.Reverse.GetValueOrDefault("two"));
+
+            // Test values that don't exist - should return default(TValue) which is null for reference types and default value for value types
+            Assert.Null(map.Forward.GetValueOrDefault(3));
+            Assert.Equal(0, map.Reverse.GetValueOrDefault("three"));
+
+            // Test values that don't exist with custom default value
+            Assert.Equal("default", map.Forward.GetValueOrDefault(3, "default"));
+            Assert.Equal(42, map.Reverse.GetValueOrDefault("three", 42));
+        }
+
         //NOTE: Property tests move to F# for easier value-based equality and fluent property definition
 
-        
+
     }
 }
