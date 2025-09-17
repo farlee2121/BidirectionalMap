@@ -101,74 +101,74 @@ namespace BidirectionalMap
         /// <summary>
         /// Publicly read-only lookup to prevent inconsistent state between forward and reverse map lookups
         /// </summary>
-        /// <typeparam name="Key"></typeparam>
-        /// <typeparam name="Value"></typeparam>
-        public class Indexer<Key, Value> : IEnumerable<KeyValuePair<Key, Value>>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        public class Indexer<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
         {
-            private IDictionary<Key, Value> _dictionary;
+            private readonly IDictionary<TKey, TValue> _dictionary;
 
             public Indexer()
             {
-                _dictionary = new Dictionary<Key, Value>();
+                _dictionary = new Dictionary<TKey, TValue>();
             }
 
-            public Indexer(IDictionary<Key, Value> dictionary)
+            public Indexer(IDictionary<TKey, TValue> dictionary)
             {
                 _dictionary = dictionary;
             }
-            public Indexer(IEqualityComparer<Key> comparer)
+            public Indexer(IEqualityComparer<TKey> comparer)
             {
-                _dictionary = new Dictionary<Key, Value>(comparer);
+                _dictionary = new Dictionary<TKey, TValue>(comparer);
             }
 
-            public Indexer(IDictionary<Key, Value> dictionary, IEqualityComparer<Key> comparer)
+            public Indexer(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
             {
-                _dictionary = new Dictionary<Key, Value>(dictionary, comparer ?? EqualityComparer<Key>.Default);
+                _dictionary = new Dictionary<TKey, TValue>(dictionary, comparer ?? EqualityComparer<TKey>.Default);
             }
 
-            public Value this[Key index]
+            public TValue this[TKey index]
             {
                 get { return _dictionary[index]; }
             }
 
-            public static implicit operator Dictionary<Key, Value>(Indexer<Key, Value> indexer)
+            public int Count
             {
-                return new Dictionary<Key, Value>(indexer._dictionary);
+                get { return _dictionary.Count; }
             }
 
-            internal void Add(Key key, Value value)
+            public static implicit operator Dictionary<TKey, TValue>(Indexer<TKey, TValue> indexer)
+            {
+                return new Dictionary<TKey, TValue>(indexer._dictionary);
+            }
+
+            internal void Add(TKey key, TValue value)
             {
                 _dictionary.Add(key, value);
             }
 
-            internal bool TryAdd(Key key, Value value)
+            internal bool TryAdd(TKey key, TValue value)
             {
                 if (_dictionary.ContainsKey(key)) return false;
                 _dictionary.Add(key, value);
                 return true;
             }
 
-            internal bool Remove(Key key)
+            internal bool Remove(TKey key)
             {
                 return _dictionary.Remove(key);
             }
 
-            internal int Count()
-            {
-                return _dictionary.Count;
-            }
-
-            public bool ContainsKey(Key key)
+            public bool ContainsKey(TKey key)
             {
                 return _dictionary.ContainsKey(key);
             }
 
-            public bool TryGetValue(Key key, out Value value)
+            public bool TryGetValue(TKey key, out TValue value)
             {
                 return _dictionary.TryGetValue(key, out value);
             }
 
-            public IEnumerable<Key> Keys
+            public IEnumerable<TKey> Keys
             {
                 get
                 {
@@ -176,7 +176,7 @@ namespace BidirectionalMap
                 }
             }
 
-            public IEnumerable<Value> Values
+            public IEnumerable<TValue> Values
             {
                 get
                 {
@@ -188,12 +188,12 @@ namespace BidirectionalMap
             /// Deep copy lookup as a dictionary
             /// </summary>
             /// <returns></returns>
-            public Dictionary<Key, Value> ToDictionary()
+            public Dictionary<TKey, TValue> ToDictionary()
             {
-                return new Dictionary<Key, Value>(_dictionary);
+                return new Dictionary<TKey, TValue>(_dictionary);
             }
 
-            public IEnumerator<KeyValuePair<Key, Value>> GetEnumerator()
+            public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
             {
                 return _dictionary.GetEnumerator();
             }
